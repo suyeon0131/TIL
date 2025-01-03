@@ -1,4 +1,7 @@
 # markdown 문법 정리
+
+기억용으로 적은거라 불친절 할 수 있읍니다
+
 ## 코드
 ### 1. 들여쓰기
 위 아래 한 줄씩 띄어쓰고 탭으로 들여쓰기 하면 코드 블럭 만들어짐
@@ -133,4 +136,5 @@ public class BootSpringBootApplication {
 
 # 참고문서
 [ihoneymon의 마크다운 작성법](https://gist.github.com/ihoneymon/652be052a0727ad59601)
+
 [마크다운 사용법 총정리](https://www.heropy.dev/p/B74sNE)
