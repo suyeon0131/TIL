@@ -1,4 +1,5 @@
 # Today I Learned
+[![My Skills](https://skillicons.dev/icons?i=git,github)](https://skillicons.dev)[![My Skills](https://skillicons.dev/icons?i=java,spring&theme=light)](https://skillicons.dev)
 - 하루 동안 학습한 내용을 기록으로 남깁니다.
 ## 작성 규칙
 - 폴더와 파일명은 영문으로 작성합니다.
