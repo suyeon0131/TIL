@@ -15,4 +15,4 @@
   - [06. 스프링 DB 접근 기술](Spring/Spring_Beginners/06_db_access.md)
   - [07. AOP](Spring/Spring_Beginners/07_aop.md)
 ### git
-- [Markdown 문법 정리](Git/markdown_syntax)
+- [Markdown 문법 정리](Git/markdown_syntax.md)
