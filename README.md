@@ -1,11 +1,14 @@
 # Today I Learned
-[![My Skills](https://skillicons.dev/icons?i=git,github)](https://skillicons.dev)
-[![My Skills](https://skillicons.dev/icons?i=java,spring&theme=light)](https://skillicons.dev)
-- 하루 동안 학습한 내용을 기록으로 남깁니다.
+<img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white">
+<img src="https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=Github&logoColor=white">
+<img src="https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=Spring&logoColor=white">
+<img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white">
+
+- 하루 동안 학습한 내용을 기록으로 남긴다.
 ## 작성 규칙
-- 폴더와 파일명은 영문으로 작성합니다.
-- 학습 내용에 대해 자세히 기록합니다.
-- 꾸준히 학습합니다.
+- 폴더와 파일명은 영문으로 작성한다.
+- 학습 내용에 대해 자세히 기록한다.
+- reference를 명시한다.
 ## 분류
 ### Spring
 - 스프링 입문
