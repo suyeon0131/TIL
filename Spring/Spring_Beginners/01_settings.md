@@ -35,7 +35,7 @@ https://start.spring.io
     - log로 남겨야 심각한 에러만 따로 모으거나 log 파일을 관리할 수 있음
     - slf4j, logback -> 요즘은 logback 많이 씀
 - `spring-boot-starter-test`
-  - 대부분 junit 사용 (테스트 프레임워크)
+  - 대부분 **junit** 사용 (테스트 프레임워크)
   - `mockito`
   - `assertj`
     - 테스트 코드를 좀 더 편리하게 작성하도록 도와줌
@@ -46,8 +46,7 @@ https://start.spring.io
 ### Welcome Page 만들기
 도메인만 누르고 들어왔을 때 첫 화면
 
-`resources/static/index.html`에 생성하면 됨
-- 정적 페이지
+`resources/static/index.html`에 생성하면 됨 -> 정적 페이지
 ```html
 <!DOCTYPE HTML>
 <html>
@@ -63,7 +62,7 @@ Hello
 
 ![settings_1](img/settings_1.png)
 
-https://spring.io에서 검색 기능 적극 활용하기
+https://spring.io 에서 검색 기능 적극 활용하기
 
 ### thymeleaf 템플릿 엔진
 - thymeleaf 공식 사이트: https://www.thymeleaf.org/
@@ -106,7 +105,7 @@ public class HelloController {
 
 ## 빌드하고 실행하기
 
-1. `./gradlew build` -> **나는 `./gradlew.bat`라고 해야 성공적으로 빌드됨(왜지?)**
+1. `./gradlew build` -> **나는 `./gradlew.bat`라고 해야 성공적으로 빌드 됨(왜지?)**
 2. `cd build/libs`
 3. `java -jar hello-spring-0.0.1-SNAPSHOT.jar`
 4. 실행 확인
