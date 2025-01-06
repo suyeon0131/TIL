@@ -1,6 +1,9 @@
 # Vi(Vim) editor 초급
 [Software Tool Time - [SWTT] vi editor 초급편](https://www.youtube.com/watch?v=5BmLqbInFbk&list=PLKseYrrlvWNrn5Fx4I6o5PCPzLSnmDB8F&index=2)
 
+1. [normal 모드에서](#normal-모드에서)
+2. [command 모드에서](#command-모드에서)
+
 **`i`: insert 모드**   
 **`esc`: normal 모드**   
 **`:`: command 모드**   
