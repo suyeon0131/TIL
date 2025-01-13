@@ -78,3 +78,7 @@ public class HelloController {
 ## API
 데이터 구조 포맷(ex. json)으로 클라이언트에게 데이터 전달
 - 서버끼리 통신할 때 주로 사용
+
+---
+무슨 토큰 어쩌고 문제를 직면... 이 글 참고해서 해결함   
+[레포지토리가 왜 없는데.](https://velog.io/@minsoo1430/Git-repository-Not-Found-%EC%97%90%EB%9F%AC-%ED%95%B4%EA%B2%B0-%EB%B0%A9%EB%B2%95)
