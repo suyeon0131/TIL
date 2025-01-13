@@ -73,7 +73,7 @@ public class HelloController {
 5. `${name}`: 모델에서 값을 꺼내서 치환
 6. `viewResolver`가 파일을 찾아 템플릿 엔진에게 넘김 
 7. 템플릿 엔진이 렌더링 해 **변환**한 후 반환
-ㅎ
+
 
 ## API
 데이터 구조 포맷(ex. json)으로 클라이언트에게 데이터 전달
