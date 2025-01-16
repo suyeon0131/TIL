@@ -51,8 +51,8 @@ https://start.spring.io
 <!DOCTYPE HTML>
 <html>
 <head>
- <title>Hello</title>
- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>Hello</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
 Hello
@@ -73,11 +73,11 @@ https://spring.io 에서 검색 기능 적극 활용하기
 ```java
 @Controller
 public class HelloController {
- @GetMapping("hello")
- public String hello(Model model) {
- model.addAttribute("data", "hello!!");
- return "hello";
- }
+  @GetMapping("hello")
+  public String hello(Model model) {
+    model.addAttribute("data", "hello!!");
+    return "hello";
+  }
 }
 ```
 
@@ -86,8 +86,8 @@ public class HelloController {
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
- <title>Hello</title>
- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>Hello</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
 <p th:text="'안녕하세요. ' + ${data}" >안녕하세요. 손님</p>
