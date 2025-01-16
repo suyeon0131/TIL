@@ -96,6 +96,7 @@ public class HelloController {
 - 실행하고 페이지 소스 코드를 보면 HTML 문법 같은 게 아예 없고 적은 문자 그대로 입력되어있음!
 
 - 문자가 아닌 데이터를 반환할 떄는 주로 api 사용
+
 **@ResponseBody 객체 반환**
 ```java
 @Controller
@@ -129,14 +130,14 @@ puvlic class HelloController {
 1. 주소 받고 내장 톰켓 서버가 스프링에 넘김
 2. 컨트롤러에 있는데 `@ResponseBody`가 붙어있네?
 3. `viewResolver` 대신 **`HttpMessageConverter`**가 동작
-   - 문자면 `StringHttpMessageConverter`
-   - 객체면 `MappingJackson2HttpMessageConverter`
+   - **문자**이면 `StringHttpMessageConverter`
+   - **객체**이면 `MappingJackson2HttpMessageConverter`
      - jackson: 객체를 json으로 바꾸는 라이브러리
    - byte 처리 등등 기타 여러 HttpMessageConverter가 기본으로 등록되어 있음
 4. 변환 후 응답
 
 
-**`ctrl + shift + enter`**: 자동 완성 (우와!)
+**`ctrl + shift + enter`**: 자동 완성 (우와!)   
 `alt + insert`: generate(getter, setter) 단축키
 
 ---
