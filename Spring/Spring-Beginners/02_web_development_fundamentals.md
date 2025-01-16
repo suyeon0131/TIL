@@ -14,8 +14,8 @@
 <!DOCTYPE HTML>
 <html>
 <head>
- <title>static content</title>
- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>static content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
 정적 컨텐츠 입니다.
@@ -40,11 +40,11 @@
 ```java
 @Controller
 public class HelloController {
- @GetMapping("hello-mvc")
- public String helloMvc(@RequestParam("name") String name, Model model) {
- model.addAttribute("name", name);
- return "hello-template";
- }
+    @GetMapping("hello-mvc")
+    public String helloMvc(@RequestParam("name") String name, Model model) {
+        model.addAttribute("name", name);
+        return "hello-template";
+    }
 }
 ```
 `resources/templates/hello-template.html`에 생성
@@ -59,7 +59,7 @@ public class HelloController {
 - 실제 서버를 타서 템플릿 엔진으로서 동작하게 되면 `'hello ' + ${name}`과 같이 치환됨
 
 **실행하고 `http://localhost:8080/hello-mvc` 입력하면 에러가 남!** -> `name` 값이 없기 때문
-- `http://localhost:8080/hello-mvc?name=spring!!`와 같이 값을 넣어주면 실행 성공~
+- `http://localhost:8080/hello-mvc?name=spring!!`와 같이 값을 넣어주면 실행 성공~   
 ![alt text](img/web_3.png)
 
 `ctrl + p`: 파라미터 정보 보기
@@ -78,6 +78,66 @@ public class HelloController {
 ## API
 데이터 구조 포맷(ex. json)으로 클라이언트에게 데이터 전달
 - 서버끼리 통신할 때 주로 사용
+
+**@ResponseBody 문자 반환**
+```java
+@Controller
+public class HelloController {
+    @GetMapping("hello-string")
+    @ResponseBody
+    public String helloString(@RequestParam("name") String name) {
+        return "hello " + name;
+    }
+}
+```
+- **`@ResponseBody`**
+  - HTTP의 body에 이 데이터를 직접 넣어 반환(HTML의 body 태그 x)
+  - 이걸 사용하면 `viewResolver` 사용 안함
+- 실행하고 페이지 소스 코드를 보면 HTML 문법 같은 게 아예 없고 적은 문자 그대로 입력되어있음!
+
+- 문자가 아닌 데이터를 반환할 떄는 주로 api 사용
+**@ResponseBody 객체 반환**
+```java
+@Controller
+puvlic class HelloController {
+    @GetMapping("hello-api")
+    @ResponseBody
+    public Hello helloApi(@RequestParam("name") String name) {
+        Hello hello = new Hello();
+        hello.setName(name);
+        return hello;
+    }
+    static class Hello {
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+}
+```
+- 객체를 반환하면 객체가 **JSON**으로 변환됨
+
+![alt text](img/web_5.png)
+  
+**@ResponseBody 사용 원리**
+![alt text](img/web_6.png)   
+1. 주소 받고 내장 톰켓 서버가 스프링에 넘김
+2. 컨트롤러에 있는데 `@ResponseBody`가 붙어있네?
+3. `viewResolver` 대신 **`HttpMessageConverter`**가 동작
+   - 문자면 `StringHttpMessageConverter`
+   - 객체면 `MappingJackson2HttpMessageConverter`
+     - jackson: 객체를 json으로 바꾸는 라이브러리
+   - byte 처리 등등 기타 여러 HttpMessageConverter가 기본으로 등록되어 있음
+4. 변환 후 응답
+
+
+**`ctrl + shift + enter`**: 자동 완성 (우와!)
+`alt + insert`: generate(getter, setter) 단축키
 
 ---
 무슨 토큰 어쩌고 문제를 직면... 이 글 참고해서 해결함   
