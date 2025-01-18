@@ -29,6 +29,7 @@
 
 ## 회원 도메인과 리포지토리 만들기
 **`alt + enter`**: import
+
 **회원 객체**    
 ```java
 // domain/Member
@@ -110,9 +111,10 @@ public class MemoryMemberRepository implements MemberRepository {
   - 이러한 방법은 준비하고 실행하는데 오래 걸리고, 반복 실행하기 어렵고 여러 테스트를 한 번에 실행하기 어렵다는 단점이 있음
   - 자바는 **JUnit**이라는 프레임워크로 테스트를 실행해서 이러한 문제를 해결함
   
-**회원 리포지토리 메모리 구현체 테스트**
-**`shift + F6`**: 이름 한 번에 바꾸기(신기하다)
+**회원 리포지토리 메모리 구현체 테스트**   
+**`shift + F6`**: 이름 한 번에 바꾸기(신기하다)   
 **`ctrl + alt + v`**: 변수 추출하기(신기방기)
+
 ```java
 // sre/test/java
 // repository/MemoryMemberRepositoryTest
