@@ -125,6 +125,16 @@ public class MemberController {
 ## 회원 웹 기능 - 조회
 **회원 컨트롤러에서 조회 가능**
 ```java
+@Controller
+public class MemberController {
+
+    @GetMapping("/members")
+    public String list(Model model) {
+        List<Member> members = memberService.findMembers();
+        model.addAttribute("members", members);
+        return "members/memberList";
+    }
+}
 ```
 
 **회원 리스트 HTML**
