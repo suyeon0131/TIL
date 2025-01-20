@@ -165,6 +165,7 @@ public class SpringConfig {
     }
 }
 ```
+- 테스트 코드 잘 짜는 게 매우매우 중요!!
 
 ## JPA
 - JPA는 기존의 반복 코드는 물론이고, 기본적인 SQL도 JPA가 직접 만들어서 실행해준다.
