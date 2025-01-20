@@ -129,6 +129,7 @@ public class BootSpringBootApplication {
 
 사이즈 조절하려면 `img width="" height=""></img>` 사용해야 하는데 번거로우니까 하지말장..
 
+++ 2025.01.20   
 마크다운에 이미지 첨부할 때 이미지 파일을 깃허브에 올려서 첨부했었는데 매우매우 쉬운 방법을 발견했다...! 이렇게 배우는 거지~   
 [베리이지하게 마크다운에 이미지 첨부하기](https://devdharu.tistory.com/entry/GitHub-README%EC%97%90-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%98%AC%EB%A6%AC%EB%8A%94-%EB%B0%A9%EB%B2%95)
 
