@@ -9,20 +9,20 @@
 4. [빌드하고 실행하기](#빌드하고-실행하기)
 
 ## 프로젝트 생성
-스프링 부트 스타터 사이트에서 스프링 프로젝트 생성   
+스프링 부트 스타터 사이트에서 스프링 프로젝트를 생성한다.     
 https://start.spring.io
 
 - `src`
   - `main`: 실제 package와 source 파일
   - `test`: 테스트 코드와 관련된 source 파일
-  - 요즘은 위와 같이 main과 test 폴더를 나누는 것이 표준화 되어있음
+  - 요즘은 위와 같이 main과 test 폴더를 나누는 것이 표준화되어 있다.
   - `build.gradle`: 버전 설정 및 라이브러리 가져오기
     - `repositories`: 라이브러리 다운 경로
     - `dependencies`: 템플릿 엔진
 
 ## 라이브러리 살펴보기
-- gradle, maven 같은 build tool은 의존 관계를 다 관리해줌
-  - 의존 관계가 있는 라이브러리를 함께 다운로드 함
+- gradle, maven 같은 build tool은 의존 관계를 다 관리해준다.
+  - 의존 관계가 있는 라이브러리를 함께 다운로드 한다.
 
 - `spring-boot-starter-web`
   - `spring-boot-starter-tomcat`
@@ -33,22 +33,22 @@ https://start.spring.io
 - `spring-boot-starter`
   - autoconfigure, dependencies, logging, core ...
   - `logging`
-    - 현업에서는 System.out.println() 대신 log를 사용해 출력해야 함
-    - log로 남겨야 심각한 에러만 따로 모으거나 log 파일을 관리할 수 있음
-    - slf4j, logback -> 요즘은 logback 많이 씀
+    - 현업에서는 System.out.println() 대신 log를 사용해 출력해야 한다.
+    - log로 남겨야 심각한 에러만 따로 모으거나 log 파일을 관리할 수 있다.
+    - slf4j, logback -> 요즘은 logback을 많이 쓴다.
 - `spring-boot-starter-test`
-  - 대부분 **junit** 사용 (테스트 프레임워크)
+  - 대부분 **junit**을 사용한다. (테스트 프레임워크)
   - `mockito`
   - `assertj`
-    - 테스트 코드를 좀 더 편리하게 작성하도록 도와줌
+    - 테스트 코드를 좀 더 편리하게 작성하도록 도와준다.
   - `spring-test`
-    - spring과 통합하여 테스트 도와줌
+    - spring과 통합하여 테스트를 도와준다.
 
 ## View 환경설정
 ### Welcome Page 만들기
-도메인만 누르고 들어왔을 때 첫 화면
+도메인만 누르고 들어왔을 때 첫 화면을 뜻한다.
 
-`resources/static/index.html`에 생성하면 됨 -> 정적 페이지
+`resources/static/index.html`에 생성한다. -> 정적 페이지
 ```html
 <!DOCTYPE HTML>
 <html>
@@ -64,13 +64,13 @@ Hello
 
 ![settings_1](img/settings_1.png)
 
-https://spring.io 에서 검색 기능 적극 활용하기
+> https://spring.io 에서 검색 기능 적극 활용하기
 
 ### thymeleaf 템플릿 엔진
 - thymeleaf 공식 사이트: https://www.thymeleaf.org/
 - 스프링 공식 튜토리얼: https://spring.io/guides/gs/serving-web-content/
 
-`controller`: 웹 애플리케이션에서 첫 번째 진입점
+`controller`: 웹 애플리케이션에서 첫 번째 진입점이다.
 
 ```java
 @Controller
@@ -83,7 +83,7 @@ public class HelloController {
 }
 ```
 
-`resources/templates/hello.html`에 생성
+`resources/templates/hello.html`에 생성한다.
 ```html
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
@@ -101,18 +101,18 @@ public class HelloController {
 
 ### 동작 환경
 ![settings_3](img/settings_3.png)
-- 컨트롤러에서 리턴 값으로 문자를 반환하면 `viewResolver`가 화면을 찾아서 처리
+- 컨트롤러에서 리턴 값으로 문자를 반환하면 `viewResolver`가 화면을 찾아서 처리한다.
   - 스프링 부트 템플릿 엔진 기본 viewName 매핑
   - `resources/templates/`+{ViewName}+`.html`
 
 ## 빌드하고 실행하기
 
-1. `./gradlew build` -> **나는 `./gradlew.bat`라고 해야 성공적으로 빌드 됨(왜지?)**
+1. `./gradlew build` -> **나는 `./gradlew.bat`라고 해야 성공적으로 빌드 된다.(왜지?)**
 2. `cd build/libs`
 3. `java -jar hello-spring-0.0.1-SNAPSHOT.jar`
 4. 실행 확인
 
 ---
-github에 디렉토리 push 할 때 바보 같은 짓을 함!   
-나와 매우 똑같은 상황의 글을 봐서 해결함   
+github에 디렉토리 push 할 때 바보 같은 짓을 했다!   
+나와 매우 똑같은 상황의 글을 봐서 해결했다.   
 [branch가 여기서는 main이고 여기서는 master가 되...](https://velog.io/@jytrack/Git-Error-fatal-in-unpopulated-submodule-...-%ED%95%B4%EA%B2%B0%ED%95%98%EA%B8%B0)

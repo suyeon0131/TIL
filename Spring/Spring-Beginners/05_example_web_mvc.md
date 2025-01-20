@@ -42,9 +42,9 @@ public class HomeController {
 ```
 
 ![alt text](img/ex2_1.png)   
-- `회원 가입` 누르면 `localhost:8080/members/new`로 이동
-- `회원 목록` 누르면 `localhost:8080/members`로 이동
-- **컨트롤러가 정적 파일보다 우선순위 높음**
+- `회원 가입` 누르면 `localhost:8080/members/new`로 이동한다.
+- `회원 목록` 누르면 `localhost:8080/members`로 이동한다.
+- **컨트롤러가 정적 파일보다 우선순위가 높다**
 
 ## 회원 웹 기능 - 등록
 ### 회원 등록 폼 개발
@@ -120,9 +120,9 @@ public class MemberController {
 ```
 - **`@GetMapping`**
   - URL 창에 치는 거
-  - 주로 **조회**할 때 사용
+  - 주로 **조회**할 때 사용한다.
 - **`@PostMapping`**
-  - 데이터를 폼 같은 데 넣어서 **전달**(등록)할 때 사용
+  - 데이터를 폼 같은 데 넣어서 **전달**(등록)할 때 사용한다.
 
 ## 회원 웹 기능 - 조회
 **회원 컨트롤러에서 조회 가능**
@@ -172,4 +172,4 @@ public class MemberController {
 
 ![alt text](img/ex2_3.png)
 
-- 메모리 안에 있기 때문에 껐다 켜면 데이터 삭제됨 -> 파일이나 데이터베이스에 저장해야함
+- 메모리 안에 있기 때문에 껐다 켜면 데이터가 삭제된다. -> 파일이나 데이터베이스에 저장해야한다.
