@@ -94,6 +94,7 @@ spring.datasource.username=sa
 - **`@Transactional`**
   - 테스트 시작 전에 트랜잭션을 시작하고, 테스트가 끝나면 롤백한다.
   - 즉, DB에 데이터가 반영이 안된다. (테스트 반복 실행 가능!)
+  - `@Commit`을 사용하면 반영된다.
 - 통합 테스트 보다는 순수한 단위 테스트가 좋은 테스트!
 
 ## 스프링 JdbcTemplate
@@ -169,11 +170,156 @@ public class SpringConfig {
 
 ## JPA
 - JPA는 기존의 반복 코드는 물론이고, 기본적인 SQL도 JPA가 직접 만들어서 실행해준다.
-- JPA를 사용하면, SQL과 데이터 중심의 설계에서 객체 중심의 설계로 패러다임을 전환 할 수 있다.
+- JPA를 사용하면, SQL과 데이터 중심의 설계에서 **객체 중심의 설계**로 패러다임을 전환 할 수 있다.
 - JPA를 사용하면 개발 생산성을 크게 높일 수 있다.
+- JPA -> 인터페이스
+- **ORM(Object Relational Mapping)**: 객체의 오브젝트와 관계형 데이터베이스의 테이블을 맵핑한다.
 
 **build.gradle 파일에 JPA, h2 데이터베이스 관련 라이브러리 추가**
+```
+implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+```
+
+**스프링 부트에 JPA 설정 추가**
+```
+// resources/application.properties
+spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto=none
+```
+- `show-sql`: JAP가 생성하는 SQL을 출력한다.
+- `ddl-auto`: JPA는 테이블을 자동으로 생성하는 기능을 제공하는데, `none`을 사용하면 해당 기능을 끈다.
+  - `create`를 사용하면 엔티티 정보를 바탕으로 테이블을 직접 생성해준다. -> 해보장~
+
+**JPA 엔티티 매핑**
 ```java
+// domain/Member
+@Entity
+public class Member {
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+}
+```
+- `IDENTITY`: DB가 자동으로 생성해주는 거 (ex. h2의 ID) 
+
+**JPA 회원 리포지토리**
+```java
+public class JpaMemberRepository implements MemberRepository {
+
+    private final EntityManager em;
+
+    public JpaMemberRepository(EntityManager em) {
+        this.em = em;
+    }
+
+    @Override
+    public Member save(Member member) {
+        em.persist(member);
+        return member;
+    }
+
+    @Override
+    public Optional<Member> findById(Long id) {
+        Member member = em.find(Member.class, id);
+        return Optional.ofNullable(member);
+    }
+
+    @Override
+    public Optional<Member> findByName(String name) {
+        List<Member> result = em.createQuery("select m from Member m where m.name = :name", Member.class)
+                .setParameter("name", name)
+                .getResultList();
+        return result.stream().findAny();
+    }
+
+    @Override
+    public List<Member> findAll() {
+        return em.createQuery("select m from Member m", Member.class)
+                .getResultList();
+    }
+}
+```
+- JPA를 사용하기 위해서는 `EntityManager`를 주입 받아야 한다.
+- `ctrl + alt + n`: inline
+
+**서비스 계층에 트랜잭션 추가**
+```java
+@Transactional
+public class MemberService { }
+```
+- 해당 클래스의 메서드를 실행할 때 트랜잭션을 시작하고, 메서드가 정상 종료되면 트랜잭션을 커밋한다.
+  - 만약 런타임 예외가 발생하면 롤백한다.
+- **JPA를 통한 모든 데이터 변경은 트랜잭션 안에서 실행해야 한다.**
+
+**JPA를 사용하도록 스프링 설정 변경**
+```java
+@Configuration
+public class SpringConfig {
+
+    private EntityManager em;
+
+    @Autowired
+    public SpringConfig(EntityManager em) {
+        this.em = em;
+    }
+
+    @Bean
+    public MemberRepository memberRepository() {
+        // return new MemoryMemberRepository();
+        // return new JdbcMemberRepository(dataSource);
+        //return new JdbcTemplateMemberRepository(dataSource);
+        return new JpaMemberRepository(em);
+    }
+}
 ```
 
 ## 스프링 데이터 JPA
+- 스프링 부트와 JPA만 사용해도 개발 생산성이 많이 증가하고, 개발 해야 할 코드도 확연히 줄어든다!
+- 여기에 **스프링 데이터 JPA**도 사용하면, 기존의 한계를 넘어서 리포지토리에 구현 클래스 없이 인터페이스 만으로 개발 할 수 있다. (헐)
+  - 반복 개발해온 기본 CRUD 기능도 제공한다.
+- 단순하고 반복이라고 생각했던 개발 코드들이 확연히 줄어들어 개발이 정말 즐거워진다. (진짜루?)
+  - 핵심 비즈니스 로직을 개발하는 데 집중할 수 있다.
+> 스프링 데이터 JPA는 JPA를 편리하게 사용하도록 도와주는 기술이기 때문에 **우선 JPA 먼저 익히도록 하자**
+
+**스프링 데이터 JPA 회원 리포지토리**
+```java
+public interface SpringDataJpaMemberRepository extends JpaRepository<Member, Long>, MemberRepository {
+
+    @Override
+    Optional<Member> findByName(String name);
+}
+```
+- 인터페이스는 다중 상속이 가능하다. (기억 안나면 자바를 복습하자)
+- `SpringDataJpaMemberRepository`가 `JpaRepository`를 받고 있으면 구현체를 자동으로 만들어준다.
+  - 스프링 빈을 자동으로 등록! -> 우린 이걸 가져다쓰면 되지롱
+
+**스프링 데이터 JPA 회원 리포지토리를 사용하도록 스프링 설정 변경**
+```java
+@Configuration
+public class SpringConfig {
+
+    private final MemberRepository memberRepository;
+
+    @Autowired // 생략 가능
+    public SpringConfig(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
+
+    @Bean
+    public MemberService memberService() {
+        return new MemberService(memberRepository);
+    }
+}
+```
+
+**스프링 데이터 JPA 제공 클래스**
+![Image](https://github.com/user-attachments/assets/715d15f5-5538-4ed4-b3a9-258ddfe6a580)   
+
+**스프링 데이터 JPA 제공 기능**
+- 인터페이스를 통한 기본적인 CRUD
+- `findByName()` , `findByEmail()` 처럼 메서드 이름 만으로 조회 기능을 제공한다.
+- 페이징 기능 자동으로 제공한다.
+
+> 복잡한 동적 쿼리는 **Querydsl**이라는 라이브러리를 사용하면 된다.
+> Querydsl을 사용하면 쿼리도 자바 코드로 안전하게 작성할 수 있고, 동적 쿼리도 편리하게 작성할 수 있다.
+> 이 조합으로 해결하기 어려운 쿼리는 JPA가 제공하는 네이티브 쿼리를 사용하거나, 앞서 학습한 스프링 JdbcTemplate를 사용하면 된다.
