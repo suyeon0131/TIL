@@ -56,10 +56,53 @@ ApplicationContext applicationContext = new AnnotationConfigApplicationContext(A
 
 ## 스프링 빈 조회 - 상속 관계
 - 부모 타입으로 조회하면 자식 타입도 함께 조회한다.
-
+  - 가장 위인 `Object` 타입으로 조회하면 모든 스프링 빈이 조회된다.
+- **`ApplicationContextExtendsFindTest`** 참고
 
 ## BeanFactory와 ApplicationContext
+![Image](https://github.com/user-attachments/assets/1809eb0b-c91f-4e4c-ba66-b68102fb5791)   
+
+### BeanFactory  
+- 스프링 컨테이너의 최상위 인터페이스이다.
+- 스프링 빈을 관리하고 조회하는 역할을 한다.
+- ex. `getBean()`
+
+### ApplicationContext
+- BeanFactory 기능을 모두 상속 받아서 제공한다.
+- 애플리케이션을 개발할 때는 빈을 관리하고 조회하는 기능은 물론이고, 수 많은 부가기능이 필요하다.
+
+### ApplicationContext가 제공하는 부가기능
+- **메시지 소스를 활용한 국제화 기능**
+  - ex. 한국에서 들어오면 한국어로, 영어권에서 들어오면 영어로 출력한다.
+- **환경 변수**
+  - 로컬, 개발, 운영 등을 구분해서 처리한다.
+- **애플리케이션 이벤트**
+  - 이벤트를 발행하고 구독하는 모델을 편리하게 지원한다.
+- **편리한 리소스 조회**
+  - 파일, 클래스패스, 외부 등에서 리소스를 편리하게 조회한다.
 
 ## 다양한 설정 형식 지원 - 자바 코드, XML
+- 스프링 컨테이너는 다양한 형식의 설정 정보를 받아들일 수 있게 유연하게 설계되어 있다.
+
+- 애노테이션 기반 자바 코드 설정 사용
+  - `new AnnotationConfigApplicationContext(AppConfig.class)`
+- XML 설정 사용
+  - `GenericXmlApplicationContext`를 사용하면서 `xml` 설정 파일을 넘긴다.
 
 ## 스프링 빈 설정 메타 정보 - BeanDefinition
+- 스프링은 어떻게 이런 다양한 설정 형식들을 지원할까? -> 중심에 `BeanDefinition`이라는 추상화 존재!
+- `BeanDefinition`: 빈 설정 메타 정보
+  - `@Bean`, `<bean>` 당 각각 하나씩 메타 정보가 생성된다.
+- 스프링 컨테이너는 이 메타 정보를 기반으로 스프링 빈을 생성한다.
+
+![Image](https://github.com/user-attachments/assets/520ea9a2-69ed-4a98-be80-63762d267854)
+
+- **BeanDefinition 정보**
+  - BeanClassName: 생성할 빈의 클래스 명
+  - factoryBeanName: 팩토리 역할의 빈을 사용할 경우 이름 (ex. appConfig)
+  - factoryMethodName: 빈을 생성할 팩토리 메서드 지정 (ex. memberService)
+  - Scope: 싱글톤 (기본값)
+  - lazyInit: 스프링 컨테이너를 생성할 때 빈을 생성하는 것이 아니라, 실제 빈을 사용할 때 까지 최대한 생성을 지연 처리 하는지 여부
+  - InitMethodName: 빈을 생성하고, 의존관계를 적용한 뒤에 호출되는 초기화 메서드 명
+  - DestroyMethodName: 빈의 생명주기가 끝나서 제거하기 직전에 호출되는 메서드 명
+  - Constructor arguments, Properties: 의존관계 주입에서 사용한다. (자바 설정 처럼 팩토리 역할의 빈을 사용하면 없음)
