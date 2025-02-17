@@ -42,9 +42,10 @@ public class NetworkClient implements InitializingBean, DisposableBean
   - 종료 메서드를 추론해서 호출한다.
 
 ## 애노테이션 @PostConstruct, @PreDestroy
-- 이 방법을 쓰자
+- 이 방법을 쓰자!
 - 특징
   - 가장 권장하는 방법이다.
   - 스프링 기술이 아니라 자바 표준이기 때문에 다른 컨테이너에서도 동작한다.
   - 컴포넌트 스캔과 잘 어울린다.
   - 외부 라이브러리에 적용 못한다 ㅜ
+    - 이때는 `@Bean(initMethod = "init", destroyMethod = "close")`을 사용하자.
