@@ -114,10 +114,47 @@ public int logic() {
 ![Image](https://github.com/user-attachments/assets/ab3f380d-8817-4456-b9d3-d10f791b1e01)   
 
 ## request 스코프 예제 만들기
-- 동시에 여러 HTTP 요청이 들어오면 정확히 어떤 요청이 남긴 로그인지 구분하기 어렵다. -> request 스코프 사용하자~
 - `spring-boot-starter-web` 라이브러리를 추가하면 스프링 부트는 내장 톰켓 서버를 활용해서 웹 서버와 스프링을 함께 실행시킨다.
-- 
+- 동시에 여러 HTTP 요청이 들어오면 정확히 어떤 요청이 남긴 로그인지 구분하기 어렵다. -> request 스코프 사용하자~
+- UUID를 사용해서 HTTP 요청을 구분하자.
+- **`MyLogger`** 참고
+  - `@Scope(value = "request")`
+  - 빈이 생성되는 시점에 자동으로 `@PostConstruct` 초기화 메서드를 사용해서 uuid를 생성해 저장한다.
+  - 빈이 소멸되는 시점에 `@PreDestroy`를 사용해서 종료 메시지를 남긴다.
+  - `requestURL`은 빈이 생성되는 시점에는 알 수 없으므로, 외부에서 setter로 입력 받는다.
+- `LogDemoController`, `LogDemoService` 참고
+  - HttpServletRequest를 통해서 요청 URL을 받는다.
+    - 받은 requestURL 값을 myLogger에 저장한다. myLogger는 HTTP 요청 당 각각 구분되므로 다른 HTTP 요청 때문에 값이 섞이는 걱정은 노노
+  - **but, 오류 발생**
+    - 스프링 애플리케이션을 실행하는 시점에 싱글톤 빈은 생성 및 주입이 가능하지만, request 스코프 빈은 고객의 요청이 와야 생성되기 때문에 아직 생성되지 않는다.
 
 ## 스코프와 Provider
+- 위와 같은 문제를 Provider로 해결~
+- `http://localhost:8080/log-demo`   
+![Image](https://github.com/user-attachments/assets/daff931f-917b-4397-81a1-a32c76037289)   
+- `ObjectProvider` 덕분에 `ObjectProvider.getObject()`를 호출하는 시점까지 request scope **빈의 생성(요청)을 지연**할 수 있다.
+- 같은 HTTP 요청이면 같은 스프링 빈이 반환된다.
 
 ## 스코프와 프록시
+```java
+@Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
+```
+- 적용 대상이 클래스이면 `TARGET_CLASS`
+- 적용 대상이 인터페이스이면 `INTERFACES`
+- MyLogger의 가짜 프록시 클래스를 만들어두고 HTTP request와 상관 없이 가짜 프록시 클래스를 다른 빈에 미리 주입해 둘 수 있다.
+
+### 웹 스코프와 프록시 동작 원리
+```java
+myLogger = class hello.core.common.MyLogger$$SpringCGLIB$$0
+```
+- CGLIB 라이브러리로 클래스를 상속 받은 가짜 프록시 객체를 만들어서 주입한다.
+  - 의존관계 주입 또한 가짜 프록시 객체가 주입된다.
+- getClass()로 찍어보면 순수한 MyLogger 클래스가 아님을 알 수 있다.   
+![Image](https://github.com/user-attachments/assets/cb636b03-da78-490e-a61b-1955a50614a0)   
+- **가짜 프록시 객체는 요청이 오면 그때 내부에서 진짜 빈을 요청하는 위임 로직이 들어있다.**
+  - 클라이언트가 `myLogger.log()` 호출 -> 가짜 객체의 메서드 호출
+  - 가짜 프록시 객체는 request 스코프의 진짜 `myLogger.log()`를 호출
+- 정리
+  - 프록시 객체 덕분에 클라이언트는 싱글톤 빈을 사용하는 것처럼 편리하게 request scope를 사용할 수 있다.
+  - Provider든, 프록시든 **진짜 객체 조회를 꼭 필요한 시점까지 지연처리** 한다는 것이다.
+  - 애노테이션 설정 변경 만으로 원본 객체를 프록시 객체로 대체할 수 있다. -> 다형성, DI 컨테이너의 강점
