@@ -11,6 +11,9 @@
 - reference를 명시한다.
 
 ## 분류
+### Machine Learning
+- **파이썬 머신러닝 가이드**
+
 ### Spring
 - **스프링 입문**
   - [01. 프로젝트 환경설정](Spring/Spring-Beginner/01_settings.md)
