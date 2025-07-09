@@ -78,4 +78,9 @@ print(array_int2, array_int2.dtype)
 ### axis 축
 - ndarray의 shape은 행, 열, 높이 단위로 부여되는 것이 아닌, axis0, axis1과 같이 **axis 단위**로 부여
 
-<img width="613" height="232" alt="Image" src="https://github.com/user-attachments/assets/85fe1cf5-5172-4e51-a7de-134ad09330ac" />
+<img width="622" height="232" alt="Image" src="https://github.com/user-attachments/assets/4dfe959a-dac6-450f-a0d9-764ccde3c87f" />
+
+### 편리하게 생성 - arange, zeros, ones
+- `np.arange(10)` -> [0 1 2 3 4 5 6 7 8 9]
+- `np.zeros((3,2), dtype='int32')` -> [[0 0]<br>[0 0]<br>[0 0]]
+- `np.ones((3, 2))` -> [[1. 1.]<br>[1. 1.]<br>[1. 1.]]
