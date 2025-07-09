@@ -106,8 +106,78 @@ array3 shape: (5, 2)
 ```
 
 ### 인덱싱(Indexing)
-- 유형
-  - 특정 위치의 단일 값 추출
-  - 슬라이싱(Slicing): 연속된 인덱스 상의 ndarray 추출
-  - 팬시 인덱싱(Fancy Indexing): 일정한 인덱싱 집합을 list or ndarray 형태로 지정해 반환
-  - **불리언 인덱싱(Boolean Indexing)**: 특정 조건에 해당하는지 true/false 값 인덱싱 집합을 기반으로 true 위치의 ndarray 반환
+- 특정 위치의 단일 값 추출
+- 슬라이싱(Slicing): 연속된 인덱스 상의 ndarray 추출
+    
+    ![image.png](ML%E1%84%8B%E1%85%B4%20%E1%84%80%E1%85%A2%E1%84%82%E1%85%A7%E1%86%B7%E1%84%80%E1%85%AA%20%E1%84%82%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A1%E1%84%8B%E1%85%B5%20ndarray%2022abb027f57e80d89cabe058bec0e386/image%202.png)
+    
+- 팬시 인덱싱(Fancy Indexing): 일정한 인덱싱 집합을 list or ndarray 형태로 지정해 반환
+    
+    ![image.png](ML%E1%84%8B%E1%85%B4%20%E1%84%80%E1%85%A2%E1%84%82%E1%85%A7%E1%86%B7%E1%84%80%E1%85%AA%20%E1%84%82%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A1%E1%84%8B%E1%85%B5%20ndarray%2022abb027f57e80d89cabe058bec0e386/image%203.png)
+    
+    ```python
+    array1d = np.arange(start=1, stop=10)
+    array2d = array1d.reshape(3,3)
+    print(array2d)
+    
+    array3 = array2d[[0,1], 2]
+    print('array2d[[0,1], 2] => ',array3.tolist())
+    
+    array4 = array2d[[0,1], 0:2]
+    print('array2d[[0,1], 0:2] => ',array4.tolist())
+    
+    array5 = array2d[[0,1]]
+    print('array2d[[0,1]] => ',array5.tolist())
+    ```
+    
+    ```
+    [[1 2 3]
+     [4 5 6]
+     [7 8 9]]
+    array2d[[0,1], 2] =>  [3, 6]
+    array2d[[0,1], 0:2] =>  [[1, 2], [4, 5]]
+    array2d[[0,1]] =>  [[1, 2, 3], [4, 5, 6]]
+    ```
+    
+- **불리언 인덱싱(Boolean Indexing)**: 특정 조건에 해당하는지 true/false 값 인덱싱 집합을 기반으로 true 위치의 ndarray 반환
+    
+    ```python
+    array1d = np.arange(start=1, stop=10)
+    print(array1d)
+    # [ ] 안에 array1d > 5 Boolean indexing을 적용 
+    array3 = array1d[array1d > 5]
+    print('array1d > 5 불린 인덱싱 결과 값 :', array3)
+    ```
+    
+    ```
+    [1 2 3 4 5 6 7 8 9]
+    array1d > 5 불린 인덱싱 결과 값 : [6 7 8 9]
+    ```
+    
+
+### 배열의 정렬 - sort(), argsort()
+
+- `np.sort(ndarray)` : 인자로 들어온 원 행렬은 그대로 유지 → 원 행렬의 정렬된 행렬 반환
+- `ndarray.sort()` : 원 행렬 자체를 정렬된 형태로 변환 (반환 값은 None)
+    
+    ```python
+    sort_array1_desc = np.sort(org_array)[::-1]
+    print ('내림차순으로 정렬:', sort_array1_desc) 
+    ```
+    
+    ```
+    내림차순으로 정렬: [9 5 3 1]
+    ```
+    
+    ![image.png](ML%E1%84%8B%E1%85%B4%20%E1%84%80%E1%85%A2%E1%84%82%E1%85%A7%E1%86%B7%E1%84%80%E1%85%AA%20%E1%84%82%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A1%E1%84%8B%E1%85%B5%20ndarray%2022abb027f57e80d89cabe058bec0e386/image%204.png)
+    
+- `np.argsort()` : 정렬 행렬의 원본 행렬 인덱스를 ndarray 형으로 반환
+    
+    ![image.png](ML%E1%84%8B%E1%85%B4%20%E1%84%80%E1%85%A2%E1%84%82%E1%85%A7%E1%86%B7%E1%84%80%E1%85%AA%20%E1%84%82%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A1%E1%84%8B%E1%85%B5%20ndarray%2022abb027f57e80d89cabe058bec0e386/image%205.png)
+    
+
+### 행렬 내적 - np.dot(A, B)
+
+### 전치 행렬 - np.transpose(A)
+
+![image.png](ML%E1%84%8B%E1%85%B4%20%E1%84%80%E1%85%A2%E1%84%82%E1%85%A7%E1%86%B7%E1%84%80%E1%85%AA%20%E1%84%82%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A1%E1%84%8B%E1%85%B5%20ndarray%2022abb027f57e80d89cabe058bec0e386/image%206.png)
