@@ -8,8 +8,6 @@
 3. []()
 4. []()
 5. []()
-6. []()
-7. []()
 
 ## 머신러닝의 개념
 - 애플리케이션을 수정하지 않고도 데이터를 기반으로 패턴을 학습하고 결과를 추론하는 알고리즘 기법
@@ -39,9 +37,6 @@ array | 차원 | shape
 - but, 데이터 타입은 **같은 데이터 타입만** 가능
   - 한 개의 ndarray 객체에 int와 float가 함께 있을 수 없음
 
-### 타입(type) 변환
-- `astype()`: 변경을 원하는 타입을 인자로 입력
-
 ```python
 list2 = [1, 2, 'test']
 array2 = np.array(list2)
@@ -56,6 +51,9 @@ print(array3, array3.dtype)
 [1. 2. 3.] float64
 ```   
 -> 자동 형변환
+
+### 타입(type) 변환 - astype()
+- 변경을 원하는 타입을 인자로 입력
 
 ```python
 array_int = np.array([1, 2, 3])
@@ -82,5 +80,34 @@ print(array_int2, array_int2.dtype)
 
 ### 편리하게 생성 - arange, zeros, ones
 - `np.arange(10)` -> [0 1 2 3 4 5 6 7 8 9]
-- `np.zeros((3,2), dtype='int32')` -> [[0 0]<br>[0 0]<br>[0 0]]
-- `np.ones((3, 2))` -> [[1. 1.]<br>[1. 1.]<br>[1. 1.]]
+- `np.zeros((3,2), dtype='int32')` -> [[0 0] [0 0] [0 0]]
+- `np.ones((3, 2))` -> [[1. 1.] [1. 1.] [1. 1.]]
+
+### 차원, 크기 변경 - reshape()
+- `reshape(2, 5)`: 2차원의 2x5 ndarray로 변환
+- **`reshape(-1, 5)`**와 같이 인자에 **-1**을 부여하면 -1에 해당하는 axis의 크기는 **가변적**, 해당하지 않는 axis의 크기는 **인자값**으로 고정
+  
+<img width="883" height="223" alt="Image" src="https://github.com/user-attachments/assets/15f74a40-5f91-453a-9b80-48ba91f69126" />
+
+```python
+array1 = np.arange(10)
+print(array1)
+
+array2 = array1.reshape(-1,5)
+print('array2 shape:',array2.shape)
+
+array3 = array1.reshape(5,-1)
+print('array3 shape:',array3.shape)
+```
+```
+[0 1 2 3 4 5 6 7 8 9]
+array2 shape: (2, 5)
+array3 shape: (5, 2)
+```
+
+### 인덱싱(Indexing)
+- 유형
+  - 특정 위치의 단일 값 추출
+  - 슬라이싱(Slicing): 연속된 인덱스 상의 ndarray 추출
+  - 팬시 인덱싱(Fancy Indexing): 일정한 인덱싱 집합을 list or ndarray 형태로 지정해 반환
+  - **불리언 인덱싱(Boolean Indexing)**: 특정 조건에 해당하는지 true/false 값 인덱싱 집합을 기반으로 true 위치의 ndarray 반환
