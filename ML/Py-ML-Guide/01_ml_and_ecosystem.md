@@ -85,7 +85,7 @@ print(array_int2, array_int2.dtype)
 
 ### 차원, 크기 변경 - reshape()
 - `reshape(2, 5)`: 2차원의 2x5 ndarray로 변환
-- **`reshape(-1, 5)`**와 같이 인자에 **-1**을 부여하면 -1에 해당하는 axis의 크기는 **가변적**, 해당하지 않는 axis의 크기는 **인자값**으로 고정
+- **`reshape(-1, 5)`** 와 같이 인자에 **-1**을 부여하면 -1에 해당하는 axis의 크기는 **가변적**, 해당하지 않는 axis의 크기는 **인자값**으로 고정
   
 <img width="883" height="223" alt="Image" src="https://github.com/user-attachments/assets/15f74a40-5f91-453a-9b80-48ba91f69126" />
 
