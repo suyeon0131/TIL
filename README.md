@@ -14,7 +14,6 @@
 <img src="https://img.shields.io/badge/Java-007396?style=flat&logo=OpenJDK&logoColor=white"/>
 <img src="https://img.shields.io/badge/Spring-6DB33F?style=flat&logo=Spring&logoColor=white" />
 
-<br>
 
 - **기억은 기록을 이길 수 없다**
 - 하루 동안 학습한 내용을 기록으로 남긴다.
