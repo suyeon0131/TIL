@@ -14,7 +14,7 @@
 ## 분류
 ### Machine Learning
 - **파이썬 머신러닝 완벽 가이드**
-  - [01. 파이썬 기반의 머신러닝과 생태계 이해](ML/py-ml-guide/01_ml_and_ecosystem.md)
+  - [01. 파이썬 기반의 머신러닝과 생태계 이해](ML/Py-ML-Guide/01_ml_and_ecosystem.md)
   - 
 
 ### Spring
