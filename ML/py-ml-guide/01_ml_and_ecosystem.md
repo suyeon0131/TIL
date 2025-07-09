@@ -4,7 +4,7 @@
 
 **Object**
 1. [머신러닝의 개념](#머신러닝의-개념)
-2. []()
+2. [넘파이 ndarray](#넘파이-ndarray)
 3. []()
 4. []()
 5. []()
@@ -26,3 +26,56 @@
 - 과적합 쉬움
 - 복잡한 알고리즘으로 인해 도출된 결과에 대한 논리적인 이해가 어려움 (머신러닝 == 블랙박스)
 - 데이터만 집어 넣으면 자동으로 최적화된 결과를 도출할 것 -> **환상!**
+
+## 넘파이 ndarray
+- **ndarray**: N 차원 배열 객체
+
+array | 차원 | shape
+:---: | :---: | :---:
+`[1 2 3]` | 1차원 | **(3,)**
+`[[1 2 3]` <br> `[4 5 6]]` | 2차원 | (2, 3)
+
+- ndarray 내의 데이터 값은 숫자, 문자, bool 모두 가능
+- but, 데이터 타입은 **같은 데이터 타입만** 가능
+  - 한 개의 ndarray 객체에 int와 float가 함께 있을 수 없음
+
+### 타입(type) 변환
+- `astype()`: 변경을 원하는 타입을 인자로 입력
+
+```python
+list2 = [1, 2, 'test']
+array2 = np.array(list2)
+print(array2, array2.dtype)
+
+list3 = [1, 2, 3.0]
+array3 = np.array(list3)
+print(array3, array3.dtype)
+```
+```
+['1' '2' 'test'] <U21
+[1. 2. 3.] float64
+```   
+-> 자동 형변환
+
+```python
+array_int = np.array([1, 2, 3])
+array_float = array_int.astype('float64') # array_int.astype(np.float64)
+print(array_float, array_float.dtype)
+
+array_int1= array_float.astype('int32')
+print(array_int1, array_int1.dtype)
+
+array_float1 = np.array([1.1, 2.1, 3.1])
+array_int2= array_float1.astype('int32')
+print(array_int2, array_int2.dtype)
+```
+```
+[1. 2. 3.] float64
+[1 2 3] int32
+[1 2 3] int32
+```
+
+### axis 축
+- ndarray의 shape은 행, 열, 높이 단위로 부여되는 것이 아닌, axis0, axis1과 같이 **axis 단위**로 부여
+
+<img width="613" height="232" alt="Image" src="https://github.com/user-attachments/assets/85fe1cf5-5172-4e51-a7de-134ad09330ac" />
