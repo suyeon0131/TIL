@@ -108,12 +108,12 @@ array3 shape: (5, 2)
 ### 인덱싱(Indexing)
 - 특정 위치의 단일 값 추출
 - 슬라이싱(Slicing): 연속된 인덱스 상의 ndarray 추출
-    
-    ![image.png](ML%E1%84%8B%E1%85%B4%20%E1%84%80%E1%85%A2%E1%84%82%E1%85%A7%E1%86%B7%E1%84%80%E1%85%AA%20%E1%84%82%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A1%E1%84%8B%E1%85%B5%20ndarray%2022abb027f57e80d89cabe058bec0e386/image%202.png)
+
+    <img width="688" height="455" alt="Image" src="https://github.com/user-attachments/assets/dfa09537-cb08-45ce-afac-26ef600725da" />
     
 - 팬시 인덱싱(Fancy Indexing): 일정한 인덱싱 집합을 list or ndarray 형태로 지정해 반환
     
-    ![image.png](ML%E1%84%8B%E1%85%B4%20%E1%84%80%E1%85%A2%E1%84%82%E1%85%A7%E1%86%B7%E1%84%80%E1%85%AA%20%E1%84%82%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A1%E1%84%8B%E1%85%B5%20ndarray%2022abb027f57e80d89cabe058bec0e386/image%203.png)
+    <img width="687" height="225" alt="Image" src="https://github.com/user-attachments/assets/cc1511a7-b8c7-43bc-b354-9cd6675a27cd" />
     
     ```python
     array1d = np.arange(start=1, stop=10)
@@ -169,15 +169,15 @@ array3 shape: (5, 2)
     내림차순으로 정렬: [9 5 3 1]
     ```
     
-    ![image.png](ML%E1%84%8B%E1%85%B4%20%E1%84%80%E1%85%A2%E1%84%82%E1%85%A7%E1%86%B7%E1%84%80%E1%85%AA%20%E1%84%82%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A1%E1%84%8B%E1%85%B5%20ndarray%2022abb027f57e80d89cabe058bec0e386/image%204.png)
+    <img width="674" height="278" alt="Image" src="https://github.com/user-attachments/assets/65f4b9d4-1633-47bb-9b2d-cfc1d19e1df7" />
     
 - `np.argsort()` : 정렬 행렬의 원본 행렬 인덱스를 ndarray 형으로 반환
     
-    ![image.png](ML%E1%84%8B%E1%85%B4%20%E1%84%80%E1%85%A2%E1%84%82%E1%85%A7%E1%86%B7%E1%84%80%E1%85%AA%20%E1%84%82%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A1%E1%84%8B%E1%85%B5%20ndarray%2022abb027f57e80d89cabe058bec0e386/image%205.png)
+    <img width="687" height="113" alt="Image" src="https://github.com/user-attachments/assets/5221ea92-24ef-421f-b4b9-7be2ffa89d32" />
     
 
 ### 행렬 내적 - np.dot(A, B)
 
 ### 전치 행렬 - np.transpose(A)
 
-![image.png](ML%E1%84%8B%E1%85%B4%20%E1%84%80%E1%85%A2%E1%84%82%E1%85%A7%E1%86%B7%E1%84%80%E1%85%AA%20%E1%84%82%E1%85%A5%E1%86%B7%E1%84%91%E1%85%A1%E1%84%8B%E1%85%B5%20ndarray%2022abb027f57e80d89cabe058bec0e386/image%206.png)
+<img width="386" height="241" alt="Image" src="https://github.com/user-attachments/assets/a4e98daf-68fb-47ef-84fd-e97533030e46" />
