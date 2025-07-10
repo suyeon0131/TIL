@@ -387,3 +387,4 @@ titanic_df['Age_by_10'] = titanic_df['Age_by_10'] + 100
 - iloc[]: 위치 기반 인덱싱
     - 행, 열 위치 값으로 정수 입력 (index 이용 X)
 - Boolean Indexing: 조건식에 따른 필터링 제공
+
