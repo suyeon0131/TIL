@@ -5,7 +5,7 @@
 **Object**
 1. [머신러닝의 개념](#머신러닝의-개념)
 2. [넘파이 ndarray](#넘파이-ndarray)
-3. []()
+3. [판다스(Pandas)](#판다스pandas)
 4. []()
 5. []()
 
@@ -181,3 +181,209 @@ array3 shape: (5, 2)
 ### 전치 행렬 - np.transpose(A)
 
 <img width="386" height="241" alt="Image" src="https://github.com/user-attachments/assets/a4e98daf-68fb-47ef-84fd-e97533030e46" />
+
+## 판다스(Pandas)
+
+### 주요 구성 요소 - DataFrame, Series, Index
+
+- **DataFrame**: Column X Rows 2차원 데이터셋
+- **Series**: 1개의 Column 값으로만 구성된 1차원 데이터셋
+
+### 기본 API
+
+- `read_csv()`: csv 파일을 DataFrame으로 로딩
+    
+    ```python
+    titanic_df = pd.read_csv('titanic_train.csv')
+    ```
+    
+- `head()` , `tail()` : 맨 앞 또는 맨 뒤부터 일부만 추출
+- `set_option()`
+    
+    ```python
+    pd.set_option('display.max_rows', 1000) # row 수
+    pd.set_option('display.max_colwidth', 100) # 칸 글자 수
+    pd.set_option('display.max_columns', 100) # column 수
+    ```
+    
+- DataFrame 생성
+    
+    ```python
+    dic1 = {'Name': ['Chulmin', 'Eunkyung','Jinwoong','Soobeom'],
+            'Year': [2011, 2016, 2015, 2015],
+            'Gender': ['Male', 'Female', 'Male', 'Male']
+           }
+    # 딕셔너리를 DataFrame으로 변환
+    data_df = pd.DataFrame(dic1)
+    print(data_df)
+    print("#"*30)
+    
+    # 새로운 컬럼명을 추가
+    data_df = pd.DataFrame(dic1, columns=["Name", "Year", "Gender", "Age"])
+    print(data_df)
+    print("#"*30)
+    
+    # 인덱스를 새로운 값으로 할당. 
+    data_df = pd.DataFrame(dic1, index=['one','two','three','four'])
+    print(data_df)
+    print("#"*30)
+    ```
+    
+    ```
+           Name  Year  Gender
+    0   Chulmin  2011    Male
+    1  Eunkyung  2016  Female
+    2  Jinwoong  2015    Male
+    3   Soobeom  2015    Male
+    ##############################
+           Name  Year  Gender  Age
+    0   Chulmin  2011    Male  NaN
+    1  Eunkyung  2016  Female  NaN
+    2  Jinwoong  2015    Male  NaN
+    3   Soobeom  2015    Male  NaN
+    ##############################
+               Name  Year  Gender
+    one     Chulmin  2011    Male
+    two    Eunkyung  2016  Female
+    three  Jinwoong  2015    Male
+    four    Soobeom  2015    Male
+    ##############################
+    ```
+    
+- `info()` : 컬럼명, 데이터 타입, Null 건수, 데이터 건수 정보 제공
+- `describe()` : 데이터 값들의 평균, 표준편차, 4분위 분포도 제공
+- **`value_counts()`** : 개별 데이터 값의 분포도 제공
+    - 기본적으로 Null 값 무시
+    
+    ```python
+    print('titanic_df 데이터 건수:', titanic_df.shape[0])
+    
+    # value_counts()는 디폴트로 dropna=True 이므로 value_counts(dropna=True)와 동일. 
+    print(titanic_df['Embarked'].value_counts())
+    print(titanic_df['Embarked'].value_counts(dropna=False))
+    ```
+    
+    ```
+    titanic_df 데이터 건수: 891
+    
+    S    644
+    C    168
+    Q     77
+    Name: Embarked, dtype: int64
+    S      644
+    C      168
+    Q       77
+    NaN      2
+    Name: Embarked, dtype: int64
+    ```
+    
+
+### 상호 변환
+
+- list to df
+    - `df_list = pd.DataFrame(list, columns=col_name1)`
+    - df 생성 인자로 list 객체와 매핑되는 컬럼명 입력
+        - columns 안의 인자는 무조건 list 형태 (즉, col_name1은 list)
+- ndarray to df
+    - `df_array = pd.DataFrame(array, columns=col_name2)`
+    - df 생성 인자로 ndarray와 매핑되는 컬럼명 입력
+- dict to df
+    - dict의 key로 컬럼명을, value를 list 형식으로 입력
+- **df to ndarray**
+    - df 객체의 **values 속성**을 이용해 변환
+    - `df_dict.values`
+- df to list
+    - ndarray로 변환 후 tolist()를 이용해 변환
+    - `df_dict.values.tolist()`
+- df to dict
+    - df 객체의 to_dict()를 이용해 변환
+    - `df_dict.to_dict()`
+
+### 컬럼 데이터 세트 생성, 수정
+
+```python
+titanic_df['Age_0'] = 0
+titanic_df['Age_by_10'] = titanic_df['Age'] * 10
+titanic_df['Family_No'] = titanic_df['SibSp'] + titanic_df['Parch'] + 1
+titanic_df['Age_by_10'] = titanic_df['Age_by_10'] + 100
+```
+
+- 이런 식으로 df 생성 및 수정이 가능함 ㄷㄷ
+
+### 데이터 삭제 - drop()
+
+- row를 삭제할 때는 **axis=0**, column을 삭제할 때는 **axis=1**
+- 원본 df를 유지하고 싶으면 `inplace=False` 로 설정
+    
+    ```python
+    drop_result = titanic_df.drop(['Age_0', 'Age_by_10'], axis=1, inplace=True)
+    print('inplace=True 로 drop 후 반환된 값:', drop_result)
+    ```
+    
+    ```
+    inplace=True 로 drop 후 반환된 값: None
+    ```
+    
+
+### Index
+
+- DataFrame, Series의 레고드를 고유하게 식별하는 객체
+- 연산에서 제외 → **오로지 식별용**
+- index 값을 바꾸려는 연산은 안됨
+    - `reset_index()` : index를 새롭게 할당 (연속된 숫자형)
+    
+    ```python
+    print('### before reset_index ###')
+    value_counts = titanic_df['Pclass'].value_counts()
+    print(value_counts)
+    print('value_counts 객체 변수 타입과 shape:',type(value_counts), value_counts.shape)
+    
+    new_value_counts_01 = value_counts.reset_index(inplace=False)
+    print('### After reset_index ###')
+    print(new_value_counts_01)
+    print('new_value_counts_01 객체 변수 타입과 shape:',type(new_value_counts_01), new_value_counts_01.shape)
+    
+    new_value_counts_02 = value_counts.reset_index(drop=True, inplace=False)
+    print('### After reset_index with drop ###')
+    print(new_value_counts_02)
+    print('new_value_counts_02 객체 변수 타입과 shape:',type(new_value_counts_02), new_value_counts_02.shape)
+    ```
+    
+    ```
+    ### before reset_index ###
+    3    491
+    1    216
+    2    184
+    Name: Pclass, dtype: int64
+    value_counts 객체 변수 타입과 shape: <class 'pandas.core.series.Series'> (3,)
+    ### After reset_index ###
+       index  Pclass
+    0      3     491
+    1      1     216
+    2      2     184
+    new_value_counts_01 객체 변수 타입과 shape: <class 'pandas.core.frame.DataFrame'> (3, 2)
+    ### After reset_index with drop ###
+    0    491
+    1    216
+    2    184
+    Name: Pclass, dtype: int64
+    new_value_counts_02 객체 변수 타입과 shape: <class 'pandas.core.series.Series'> (3,)
+    ```
+    
+- `rename()`
+    
+    ```
+    new_value_counts_01.rename(columns={'index':'Pclass', 'Pclass':'Pclass_count'})
+    ```
+    
+
+### 인덱싱과 필터링
+
+- []: 컬럼 기반 필터링 또는 boolean 인덱싱 필터링 제공
+    - [] 안에 단일 컬럼명을 입력하면 Series 객체 반환
+    - 여러 개의 컬럼명을 입력하면 DataFrame 객체 반환
+- loc[]: 명칭 기반 인덱싱
+    - 컬럼명과 같은 명칭으로 열 위치 지정 (행 위치는 index 이용)
+- iloc[]: 위치 기반 인덱싱
+    - 행, 열 위치 값으로 정수 입력 (index 이용 X)
+- Boolean Indexing: 조건식에 따른 필터링 제공
