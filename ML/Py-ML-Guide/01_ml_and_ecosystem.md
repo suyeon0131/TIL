@@ -314,16 +314,13 @@ titanic_df['Age_by_10'] = titanic_df['Age_by_10'] + 100
 
 - row를 삭제할 때는 **axis=0**, column을 삭제할 때는 **axis=1**
 - 원본 df를 유지하고 싶으면 `inplace=False` 로 설정
-    
-    ```python
-    drop_result = titanic_df.drop(['Age_0', 'Age_by_10'], axis=1, inplace=True)
-    print('inplace=True 로 drop 후 반환된 값:', drop_result)
-    ```
-    
-    ```
-    inplace=True 로 drop 후 반환된 값: None
-    ```
-    
+
+```python
+drop_result = titanic_df.drop(['Age_0', 'Age_by_10'], axis=1, inplace=True)
+print('inplace=True 로 drop 후 반환된 값:', drop_result)
+```
+
+→ inplace=True 로 drop 후 반환된 값: None
 
 ### Index
 
@@ -382,9 +379,168 @@ titanic_df['Age_by_10'] = titanic_df['Age_by_10'] + 100
 - []: 컬럼 기반 필터링 또는 boolean 인덱싱 필터링 제공
     - [] 안에 단일 컬럼명을 입력하면 Series 객체 반환
     - 여러 개의 컬럼명을 입력하면 DataFrame 객체 반환
-- loc[]: 명칭 기반 인덱싱
+    
+    ```python
+    titanic_df[0] # [ ] 안에 숫자 index는 KeyError 오류 발생
+    ```
+    
+- **loc[]**: 명칭 기반 인덱싱
     - 컬럼명과 같은 명칭으로 열 위치 지정 (행 위치는 index 이용)
-- iloc[]: 위치 기반 인덱싱
-    - 행, 열 위치 값으로 정수 입력 (index 이용 X)
+    - 불린 인덱싱 지원 O
+- **iloc[]**: 위치 기반 인덱싱
+    - 행, 열 위치 값으로 **정수** 입력 (index 이용 X)
+    - 불린 인덱싱 지원 X
+    
+    ```python
+    data_df.iloc[:, -1] # 맨 마지막 칼럼 데이터
+    data_df.iloc[:, :-1] # 맨 마지막 칼럼을 제외한 모든 데이터
+    ```
+    
+- loc[] vs iloc[] 차이점
+    
+    ```python
+    print('위치기반 iloc slicing\n', data_df.iloc[0:1, 0],'\n')
+    print('명칭기반 loc slicing\n', data_df.loc['one':'two', 'Name'])
+    ```
+    
+    ```
+    위치기반 iloc slicing
+    one    Chulmin
+    Name: Name, dtype: object 
+    
+    명칭기반 loc slicing
+    one     Chulmin
+    two    Eunkyung
+    Name: Name, dtype: object
+    ```
+    
 - Boolean Indexing: 조건식에 따른 필터링 제공
-- 
+    
+    ```python
+    # Age가 60 초과인 row의 Name, Age 출력
+    titanic_df[titanic_df['Age'] > 60][['Name','Age']].head(3)
+    ```
+    
+
+### 정렬 - sort_values()
+
+- `ascending=True` : 오름차순 정렬 (defalut)
+
+```python
+# Pclass와 Name으로 내림차순 정렬
+titanic_sorted = titanic_df.sort_values(by=['Pclass', 'Name'], ascending=False)
+```
+
+### Aggregation
+
+- sum(), max(), min(), count(), mean()
+- df에서 바로 호출할 경우 모든 컬럼에 해당 aggregation 적용
+
+```python
+titanic_df[['Age', 'Fare']].mean()
+```
+
+### Group by()
+
+- group by 하려는 컬럼명을 입력 받으면 **DataFrameGroupBy** 객체 반환
+- 반환 된 객체에 aggregation 수행
+
+```python
+titanic = titanic_df.groupby('Pclass')[['PassengerId', 'Survived']].count()
+```
+
+| **Pclass** | **PassengerId** | **Survived** |
+| --- | --- | --- |
+| **1** | 216 | 216 |
+| **2** | 184 | 184 |
+| **3** | 491 | 491 |
+- 서로 다른 aggregation을 적용하려면 서로 다른 aggregation 메소드를 호출해야 함 → DataFrameGroupby의 **`agg()`** 활용
+
+```python
+titanic_df.groupby('Pclass')['Age'].agg([max, min])
+```
+
+| **Pclass** | **max** | **min** |
+| --- | --- | --- |
+| **1** | 80.0 | 0.92 |
+| **2** | 70.0 | 0.67 |
+| **3** | 74.0 | 0.42 |
+- 서로 다른 컬럼에 서로 다른 aggregation 메소드를 적용할 경우 → **Dict 형태**로 입력
+
+```python
+agg_format={'Age':'max', 'SibSp':'sum', 'Fare':'mean'}
+titanic_df.groupby('Pclass').agg(agg_format)
+```
+
+| **Pclass** | **Age** | **SibSp** | **Fare** |
+| --- | --- | --- | --- |
+| **1** | 80.0 | 90 | 84.154687 |
+| **2** | 70.0 | 74 | 20.662183 |
+| **3** | 74.0 | 302 | 13.675550 |
+
+### Named Aggregation
+
+- agg 내의 인자로 들어가는 Dict객체에 동일한 Key값을 가지는 두개의 value가 있을 경우 → 마지막 value로 update
+    
+    ex ) `'Age':'max', 'Age':'mean', 'Fare':'mean’` 로 하면, `‘Age':'mean', 'Fare':'mean’` 결과만 출력
+    
+    ⇒ Named Aggregation 사용
+    
+    ```python
+    titanic_df.groupby(['Pclass']).agg(age_max=('Age', 'max'),
+                        age_mean=('Age', 'mean'), fare_mean=('Fare', 'mean'))
+    ```
+    
+    | **Pclass** | **age_max** | **age_mean** | **fare_mean** |
+    | --- | --- | --- | --- |
+    | **1** | 80.0 | 38.233441 | 84.154687 |
+    | **2** | 70.0 | 29.877630 | 20.662183 |
+    | **3** | 74.0 | 25.140620 | 13.675550 |
+
+### 결손 데이터 처리
+
+- `isna()` : 주어진 컬럼 값들이 NaN인지 True/False 값을 반환
+- `fillna()` : Missing 데이터를 인자로 주어진 값으로 대체
+
+### nunique()
+
+- 컬럼 내에 몇 건의 고유 값이 있는지 파악
+
+```python
+print(titanic_df['Pclass'].nunique())
+```
+
+→ 3
+
+### replace()
+
+- 원본 값을 특정 값으로 대체
+
+```python
+replace_test_df['Cabin'] = replace_test_df['Cabin'].replace(np.nan, 'C001')
+```
+
+### apply lambda
+
+<img width="512" height="151" alt="Image" src="https://github.com/user-attachments/assets/38139237-ff24-4c87-aee4-b590535b0140" />
+
+```python
+a=[1,2,3]
+squares = map(lambda x : x**2, a)
+list(squares)
+```
+
+→ [1, 4, 9]
+
+```python
+titanic_df['Child_Adult'] = titanic_df['Age'].apply(lambda x : 'Child'
+                                                         if x <= 15 else 'Adult')
+titanic_df[['Age','Child_Adult']].head(4)
+```
+
+|  | **Age** | **Child_Adult** |
+| --- | --- | --- |
+| **0** | 22.0 | Adult |
+| **1** | 38.0 | Adult |
+| 2 | NaN | Adult |
+| 3 | 2.0 | Child |
