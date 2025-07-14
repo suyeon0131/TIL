@@ -16,6 +16,7 @@
 - **파이썬 머신러닝 완벽 가이드**
   - [01. 파이썬 기반의 머신러닝과 생태계 이해](ML/Py-ML-Guide/01_ml_and_ecosystem.md)
   - [02. 사이킷런으로 시작하는 머신러닝](ML/Py-ML-Guide/02_ml_with_scikit-learn.md)
+  - [03. 평가 (Evaluation)](ML/Py-ML-Guide/03_evaluation.md)
 
 ### Spring
 - **스프링 입문**
