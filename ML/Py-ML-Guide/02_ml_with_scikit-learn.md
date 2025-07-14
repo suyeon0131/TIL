@@ -5,7 +5,7 @@
 **Object**
 1. [붓꽃 품종 예측하기](#붓꽃-품종-예측하기)
 2. [Model Selection](#model-selection)
-3. []()
+3. [데이터 전처리](#데이터-전처리-preprocessing)
 
 ### 사이킷런
 - 머신러닝을 위한 다양한 알고리즘과 개발을 위한 편리한 프레임워크와 API 제공
@@ -123,3 +123,26 @@ grid_dtree = GridSearchCV(dtree, param_grid=parameters, cv=3,
 - 파라미터에서 value 값은 **무조건 list**
 - `refit=True` : 가장 좋은 파라미터 설정으로 재학습 (defalut)
     - fit() 수행 시, 학습이 완료된 estimator를 포함하고 있으므로 predict()를 통해 예측 가능
+
+## 데이터 전처리 (preprocessing)
+
+### 데이터 인코딩
+
+- 머신러닝 알고리즘은 문자열 데이터를 입력 받지 않음 → 숫자형으로 표현되어야 함
+- **레이블(lable) 인코딩**
+    - LabelEncoder 객체 생성 → fit(), transform()으로 인코딩 수행
+- **원-핫(one-hot) 인코딩**
+    - 2차원 ndarray로 변환 → 인코딩 적용 → 결과가 희소 행렬(sparse)이므로, toarray()를 통해 밀집 행렬(dense)로 변환
+
+### 데이터 스케일링
+
+- **표준화**
+    - 평균 0, 분산 1
+    - StandardScaler
+- **정규화**
+    - 크기 통일 (0~1)
+    - MinMaxScaler
+- Scaler로 데이터에 fit(), transform(), fit_transform() 적용 시 유의사항
+    - 테스트 데이터는 학습 데이터의 척도를 따라가야 함
+        
+        → 즉, 테스트 데이터에서는 fit()을 호출하지 않고, **transform()**만으로 변환
