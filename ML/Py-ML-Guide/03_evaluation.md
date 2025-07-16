@@ -8,11 +8,29 @@
 3. []()
 
 ## 분류(Classification) 성능 평가 지표
-- Accuracy
+- **Accuracy**
     - 데이터 불균형 상황에서는 잘 사용 X
-- confusion matrix
-- precision
-- recall
+- **Confusion Matrix**
+    
+    |  | Pred - Negative(0) | Pred - Positive(1) |
+    | --- | --- | --- |
+    | Actual - Negative(0) | TN
+    (True Negative) | FP
+    (False Positive) |
+    | Actual - Positive(1) | FN
+    (False Negative) | TP
+    (True Positive) |
+- **Precision**
+    - **예측을 Positive로 한 대상** 중에 예측과 실제값이 Positive로 일치한 데이터의 비율
+- **Recall**
+    - **실제 값이 Positive인 대상** 중에 예측과 실제 값이 Positive로 일치한 데이터의 비율
+- Precision ↔ Recall **Trade-off**
+    - 이 둘은 상호 보완적인 평가 지표이기 때문에 트레이드오프 성질을 가짐
+    - 분류하려는 업무의 특성상 precision이나 recall이 강조되어야 할 때가 있음 → **결정 임곗값(Threshold)** 조절
+        - Threshold가 낮아질수록 Positive로 예측할 확률 증가 → **recall 증가**
+    - `predict_proba()`: 0이 될 확률, 1이 될 확률 반환
+    - `Binarizer(threshold=)` : 기준값보다 같거나 작으면 0, 크면 1 반환
+    - `precision_recall_curve()` : 여러 threshold에 대한 precision, recall 계산
 - f1-score
 - ROC AUC
 
