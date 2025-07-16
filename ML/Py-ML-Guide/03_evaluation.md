@@ -14,12 +14,8 @@
     
     |  | Pred - Negative(0) | Pred - Positive(1) |
     | --- | --- | --- |
-    | Actual - Negative(0) | TN
-    (True Negative) | FP
-    (False Positive) |
-    | Actual - Positive(1) | FN
-    (False Negative) | TP
-    (True Positive) |
+    | **Actual - Negative(0)** | TN <br> (True Negative) | FP <br> (False Positive) |
+    | **Actual - Positive(1)** | FN <br> (False Negative) | TP <br> (True Positive) |
 - **Precision**
     - **예측을 Positive로 한 대상** 중에 예측과 실제값이 Positive로 일치한 데이터의 비율
 - **Recall**
