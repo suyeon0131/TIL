@@ -47,4 +47,4 @@
 
 ### 과적합
 
-<img width="507" height="381" alt="Image" src="https://github.com/user-attachments/assets/36e3ba29-a4b4-4a9c-a972-882bec66ccff" />
+<img width="457" height="331" alt="Image" src="https://github.com/user-attachments/assets/36e3ba29-a4b4-4a9c-a972-882bec66ccff" />
