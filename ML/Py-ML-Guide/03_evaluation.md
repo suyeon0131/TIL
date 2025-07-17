@@ -4,8 +4,6 @@
 
 **Object**
 1. [분류 성능 평가 지표](#분류classification-성능-평가-지표)
-2. []()
-3. []()
 
 ## 분류(Classification) 성능 평가 지표
 - **Accuracy**
