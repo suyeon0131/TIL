@@ -27,6 +27,15 @@
     - `predict_proba()`: 0이 될 확률, 1이 될 확률 반환
     - `Binarizer(threshold=)` : 기준값보다 같거나 작으면 0, 크면 1 반환
     - `precision_recall_curve()` : 여러 threshold에 대한 precision, recall 계산
-- f1-score
-- ROC AUC
-
+- **f1-score**
+    - precision + recall
+    
+    $$
+    F_1 = \dfrac{2}{\dfrac{1}{\text{recall}} + \dfrac{1}{\text{precision}}} = \dfrac{2 \cdot \text{precision} \cdot \text{recall}}{\text{precision} + \text{recall}}
+    $$
+    
+- **ROC AUC**
+    - FPR이 변할 때 TPR(recall)이 어떻게 변하는지 나타낸 곡선
+    - 면적이 1에 가까울수록 좋음
+        - 0.5 → random 수준
+    - `roc_curve()` : 여러 threshold에 대한 FPR, TPR 계산
