@@ -103,8 +103,7 @@ VotingClassifier(estimators=[('LR',lr_clf),('KNN',knn_clf)], voting='soft')
 ### Bagging
 
 - 각각의 분류기가 모두 같은 유형의 알고리즘. but, 데이터 샘플링을 다르게 해서 학습
-- **bootstrapping**: 중복을 허용하면서 랜덤 샘플링.  
-    → bagging(bootstrap aggregating)
+- **bootstrapping**: 중복을 허용하면서 랜덤 샘플링. → bagging(bootstrap aggregating)
 - **Random Forest:** Bagging 방식으로 학습 수행 후 Voting을 통해 예측 결정
     - 무작위로 m개의 feature 선택  → $m = \sqrt p$
     - 주요 하이퍼파라미터
