@@ -83,7 +83,7 @@ ftr_importances_values = best_df_clf.feature_importances_
     - 결정 트리의 단점인 과적합 보완
 - voting & bagging → 여러 개의 분류기가 투표를 통해 최종 예측을 결정
 
-    <img width="950" height="500" alt="Image" src="https://github.com/user-attachments/assets/99e85e6c-e786-408a-9087-e0d946938e11" />
+    <img width="850" height="450" alt="Image" src="https://github.com/user-attachments/assets/99e85e6c-e786-408a-9087-e0d946938e11" />
     
     Voting과 Bagging 차이점 (출처: [https://daebaq27.tistory.com/32](https://daebaq27.tistory.com/32))
 
@@ -120,7 +120,7 @@ VotingClassifier(estimators=[('LR',lr_clf),('KNN',knn_clf)], voting='soft')
 - **Adaboost**
     - 틀린 샘플에 더 집중하도록 가중치 조절
 
-    <img width="880" height="413" alt="Image" src="https://github.com/user-attachments/assets/e18ed5c2-85fb-4b5f-bb99-4a7e862e49f8" />
+    <img width="780" height="363" alt="Image" src="https://github.com/user-attachments/assets/e18ed5c2-85fb-4b5f-bb99-4a7e862e49f8" />
 
     Adaboost 알고리즘 (출처: [https://medium.datadriveninvestor.com/understanding-adaboost-and-scikit-learns-algorithm-c8d8af5ace10](https://medium.datadriveninvestor.com/understanding-adaboost-and-scikit-learns-algorithm-c8d8af5ace10))
 
