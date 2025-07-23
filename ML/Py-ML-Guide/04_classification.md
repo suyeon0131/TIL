@@ -277,9 +277,9 @@ VotingClassifier(estimators=[('LR',lr_clf),('KNN',knn_clf)], voting='soft')
 <div>
     <pre><code>
     xgb_search_space = {'max_depth': hp.quniform('max_depth', 5, 20, 1),
-                'min_child_weight': hp.quniform('min_child_weight', 1, 2, 1),
-                'learning_rate': hp.uniform('learning_rate', 0.01, 0.2),
-                'colsample_bytree': hp.uniform('colsample_bytree', 0.5, 1)
+                        'min_child_weight': hp.quniform('min_child_weight', 1, 2, 1),
+                        'learning_rate': hp.uniform('learning_rate', 0.01, 0.2),
+                        'colsample_bytree': hp.uniform('colsample_bytree', 0.5, 1)
                         }
     </code></pre>
     <ul>
@@ -289,17 +289,17 @@ VotingClassifier(estimators=[('LR',lr_clf),('KNN',knn_clf)], voting='soft')
 </div>
 <div>
     <pre><code>
-    def objective_func(search_space):
-        # 수행 시간 절약을 위해 n_estimators는 100으로 축소
-        xgb_clf = XGBClassifier(n_estimators=100, max_depth=int(search_space['max_depth']),
-                                min_child_weight=int(search_space['min_child_weight']),
-                                learning_rate=search_space['learning_rate'],
-                                colsample_bytree=search_space['colsample_bytree'], 
-                                eval_metric='logloss')
-        
-        accuracy = cross_val_score(xgb_clf, X_train, y_train, scoring='accuracy', cv=3)
+def objective_func(search_space):
+    # 수행 시간 절약을 위해 n_estimators는 100으로 축소
+    xgb_clf = XGBClassifier(n_estimators=100, max_depth=int(search_space['max_depth']),
+                            min_child_weight=int(search_space['min_child_weight']),
+                            learning_rate=search_space['learning_rate'],
+                            colsample_bytree=search_space['colsample_bytree'], 
+                            eval_metric='logloss')
+    
+    accuracy = cross_val_score(xgb_clf, X_train, y_train, scoring='accuracy', cv=3)
 
-        return {'loss':-1 * np.mean(accuracy), 'status': STATUS_OK}
+    return {'loss':-1 * np.mean(accuracy), 'status': STATUS_OK}
 </code></pre>
     <ul>
         <li>fmin()에서 search_space로 입력된 값은 모두 실수형 → XGBClassifier의 정수형 하이퍼파라미터를 위해 정수형 변환 필요</li>
