@@ -202,7 +202,7 @@ VotingClassifier(estimators=[('LR',lr_clf),('KNN',knn_clf)], voting='soft')
         <summary>그래프</summary>
         <div>
             <img width="816" height="400" alt="Image" src="https://github.com/user-attachments/assets/ca313432-4913-4514-a7f1-ed10b3287673" />
-            <p> (출처: https://velog.io/@ranyjoon/베이지안-최적화-기반-HyperOpt-XGBoost-LightGBM) </p>
+            <p>(출처: https://velog.io/@ranyjoon/베이지안-최적화-기반-HyperOpt-XGBoost-LightGBM)</p>
         </div>
         </details>
   3. 획득 함수에서 다음으로 관측할 하이퍼파라미터 추출
@@ -211,7 +211,7 @@ VotingClassifier(estimators=[('LR',lr_clf),('KNN',knn_clf)], voting='soft')
         <summary>그래프</summary>
         <div>
             <img width="816" height="408" alt="Image" src="https://github.com/user-attachments/assets/ba1ed835-3c7e-409a-83be-520f9b708ee4" />
-            <p> (출처: https://velog.io/@ranyjoon/베이지안-최적화-기반-HyperOpt-XGBoost-LightGBM) </p>
+            <p>(출처: https://velog.io/@ranyjoon/베이지안-최적화-기반-HyperOpt-XGBoost-LightGBM)</p>
         </div>
         </details>
   5. 반복
@@ -262,12 +262,53 @@ VotingClassifier(estimators=[('LR',lr_clf),('KNN',knn_clf)], voting='soft')
     <div>
         <pre><code>print(trial_val.results)</code></pre>
         <ul>
-            <li> fmin()의 인자로 들어가는 Trials 객체의 result 속성에 목적 함수 반환 값들이 리스트 형태로 저장됨 </li>
-            <li> {’loss’: 함수 반환값, ‘state’: 반환 상태 값} 형태 </li>
+            <li>fmin()의 인자로 들어가는 Trials 객체의 result 속성에 목적 함수 반환 값들이 리스트 형태로 저장됨</li>
+            <li>{’loss’: 함수 반환값, ‘state’: 반환 상태 값} 형태</li>
         </ul>
         <pre><code>print(trial_val.vals)</code></pre>
         <ul>
             <li> vals 속성에 {’입력변수명’: 개별 수행 시마다 입력된 값 리스트} 형태로 저장됨 </li>
         </ul>
+    </div>
+    </details>
+
+<details markdown="1">
+    <summary>XGBoost 하이퍼파라미터 튜닝에 적용</summary>
+    <div>
+        <pre><code>
+        xgb_search_space = {'max_depth': hp.quniform('max_depth', 5, 20, 1),
+                    'min_child_weight': hp.quniform('min_child_weight', 1, 2, 1),
+                    'learning_rate': hp.uniform('learning_rate', 0.01, 0.2),
+                    'colsample_bytree': hp.uniform('colsample_bytree', 0.5, 1)
+			              }
+        </code></pre>
+        <ul>
+            <li>max_depth → 5에서 20까지 1간격, min_child_weight → 1에서 2까지 1간격</li>
+            <li>colsample_bytree → 0.5에서 1사이, learning_rate → 0.01에서 0.2사이 정규 분포된 값으로 검색</li>
+        </ul>
+        <pre><code>
+        def objective_func(search_space):
+            # 수행 시간 절약을 위해 n_estimators는 100으로 축소
+            xgb_clf = XGBClassifier(n_estimators=100, max_depth=int(search_space['max_depth']),
+                                    min_child_weight=int(search_space['min_child_weight']),
+                                    learning_rate=search_space['learning_rate'],
+                                    colsample_bytree=search_space['colsample_bytree'], 
+                                    eval_metric='logloss')
+            
+            accuracy = cross_val_score(xgb_clf, X_train, y_train, scoring='accuracy', cv=3)
+        
+            return {'loss':-1 * np.mean(accuracy), 'status': STATUS_OK}
+        </code></pre>
+        <ul>
+            <li>fmin()에서 search_space로 입력된 값은 모두 실수형 → XGBClassifier의 정수형 하이퍼파라미터를 위해 정수형 변환 필요</li>
+            <li>정확도는 높을수록 좋음 → -1을 곱해서 정확도가 클수록 최소가 되도록 설정</li>
+        </ul>
+        <pre><code>
+        best = fmin(fn=objective_func,
+            space=xgb_search_space,
+            algo=tpe.suggest,
+            max_evals=50, # 최대 반복 횟수를 지정
+            trials=trial_val, rstate=np.random.default_rng(seed=9))
+        </code><pre>
     </div>
     </details>
