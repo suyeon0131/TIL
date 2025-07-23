@@ -201,7 +201,7 @@ VotingClassifier(estimators=[('LR',lr_clf),('KNN',knn_clf)], voting='soft')
         <details markdown="1">
         <summary>그래프</summary>
         <div>
-            <img width="956" height="500" alt="Image" src="https://github.com/user-attachments/assets/ca313432-4913-4514-a7f1-ed10b3287673" />
+            <img width="856" height="400" alt="Image" src="https://github.com/user-attachments/assets/ca313432-4913-4514-a7f1-ed10b3287673" />
             <p> (출처: https://velog.io/@ranyjoon/베이지안-최적화-기반-HyperOpt-XGBoost-LightGBM) </p>
         </div>
         </details>
@@ -210,7 +210,7 @@ VotingClassifier(estimators=[('LR',lr_clf),('KNN',knn_clf)], voting='soft')
         <details markdown="1">
         <summary>그래프</summary>
         <div>
-            <img width="946" height="508" alt="Image" src="https://github.com/user-attachments/assets/ba1ed835-3c7e-409a-83be-520f9b708ee4" />
+            <img width="846" height="408" alt="Image" src="https://github.com/user-attachments/assets/ba1ed835-3c7e-409a-83be-520f9b708ee4" />
             <p> (출처: https://velog.io/@ranyjoon/베이지안-최적화-기반-HyperOpt-XGBoost-LightGBM) </p>
         </div>
         </details>
