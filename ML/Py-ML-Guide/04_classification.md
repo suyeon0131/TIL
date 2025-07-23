@@ -196,17 +196,17 @@ VotingClassifier(estimators=[('LR',lr_clf),('KNN',knn_clf)], voting='soft')
 - 미지의 함수가 반환하는 값의 **최소/최대값을 만드는 최적의 해**를 짧은 반복을 통해 찾아내는 방식
 - 새로운 데이터를 입력 받았을 때 최적 함수를 예측하는 **사후 모델을 개선**하면서 최적 함수 도출
 - 수행 단계
-    1. 랜덤하게 하이퍼파라미터를 샘플링해서 성능 결과 관측
-    2. 관측된 값을 기반으로 대체 모델이 최적 함수 예측/추정
+  1. 랜덤하게 하이퍼파라미터를 샘플링해서 성능 결과 관측
+  2. 관측된 값을 기반으로 대체 모델이 최적 함수 예측/추정
         <details markdown="1">
         <summary>그래프</summary>
         <div>
-            <img width="826" height="400" alt="Image" src="https://github.com/user-attachments/assets/ca313432-4913-4514-a7f1-ed10b3287673" />
+            <img width="816" height="400" alt="Image" src="https://github.com/user-attachments/assets/ca313432-4913-4514-a7f1-ed10b3287673" />
             <p> (출처: https://velog.io/@ranyjoon/베이지안-최적화-기반-HyperOpt-XGBoost-LightGBM) </p>
         </div>
         </details>
-    3. 획득 함수에서 다음으로 관측할 하이퍼파라미터 추출
-    4. 해당 하이퍼파라미터로 관측된 값을 기반으로 다시 최적 함수 예측/추정
+  3. 획득 함수에서 다음으로 관측할 하이퍼파라미터 추출
+  4. 해당 하이퍼파라미터로 관측된 값을 기반으로 다시 최적 함수 예측/추정
         <details markdown="1">
         <summary>그래프</summary>
         <div>
@@ -214,7 +214,7 @@ VotingClassifier(estimators=[('LR',lr_clf),('KNN',knn_clf)], voting='soft')
             <p> (출처: https://velog.io/@ranyjoon/베이지안-최적화-기반-HyperOpt-XGBoost-LightGBM) </p>
         </div>
         </details>
-    5. 반복
+  5. 반복
 - 주요 패키지
   - **HyperOpt**, Bayesian optimazation, **Optuna**
 
