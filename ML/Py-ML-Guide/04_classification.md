@@ -286,6 +286,7 @@ VotingClassifier(estimators=[('LR',lr_clf),('KNN',knn_clf)], voting='soft')
         <li>max_depth → 5에서 20까지 1간격, min_child_weight → 1에서 2까지 1간격</li>
         <li>colsample_bytree → 0.5에서 1사이, learning_rate → 0.01에서 0.2사이 정규 분포된 값으로 검색</li>
     </ul>
+    
     <pre><code>
     def objective_func(search_space):
         # 수행 시간 절약을 위해 n_estimators는 100으로 축소
@@ -309,6 +310,6 @@ VotingClassifier(estimators=[('LR',lr_clf),('KNN',knn_clf)], voting='soft')
         algo=tpe.suggest,
         max_evals=50, # 최대 반복 횟수를 지정
         trials=trial_val, rstate=np.random.default_rng(seed=9))
-    </code><pre>
+    </code></pre>
 </div>
 </details>
