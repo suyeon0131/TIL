@@ -5,7 +5,7 @@
 **Object**
 1. [Decision Tree(결정 트리)](#decision-tree결정-트리)
 2. [Ensemble(앙상블)](#ensemble앙상블)
-3. []()
+3. [하이퍼파라미터 튜닝](#하이퍼파라미터-튜닝)
 
 - 학습 데이터로 주어진 데이터의 feature와 label 값을 머신러닝 알고리즘으로 학습 → 모델 생성 → 미지의 값 예측
 
@@ -176,3 +176,106 @@ VotingClassifier(estimators=[('LR',lr_clf),('KNN',knn_clf)], voting='soft')
         - `early_stopping_rounds` : 최대 반복 횟수
         - `eval_metric` : 비용 평가 지표
         - `eval_set` : 평가를 수행하는 검증 데이터셋
+
+- **LightGBM**
+    - (XGBoost 대비) 학습/예측 수행 시간 빠름, 메모리 사용량 적음, 카데고리형 featuer의 자동 변환과 최적 분할
+    - **leaf 중심** 트리 분할
+    - 주요 하이퍼파라미터
+        - `n_estimators` , `learning_rate` , `max_depth` , `min_child_samples` , `subsample` , `colsample_bytree` , `mun_leaves` , etc..
+
+## 하이퍼파라미터 튜닝
+- Grid Search, Random Search, Bayesian Optimization, 수동 튜닝
+- Gradient Boosting 기반 알고리즘은 튜닝해야 하는 하이퍼파라미터 개수가 많고 범위가 넓음 → **시간 오래 걸림**
+    - Grid Search → 개별 하이퍼파라미터들을 grid 형태로 지정하는 것은 한계가 존재
+    - Random Search → 수행 시간은 줄지만 무작위 선택으로 인해 최적 검출에 대한 태생적 제약 존재
+- **Bayesian Optimization**이 필요한 경우
+    - 최소한의 시도로 최적의 답을 찾아야 할 때
+    - 개별 시도가 너무 많은 시간/자원을 필요로 할 때
+
+### Bayesian Optimization (베이지안 최적화)
+- 미지의 함수가 반환하는 값의 **최소/최대값을 만드는 최적의 해**를 짧은 반복을 통해 찾아내는 방식
+- 새로운 데이터를 입력 받았을 때 최적 함수를 예측하는 **사후 모델을 개선**하면서 최적 함수 도출
+- 수행 단계
+    1. 랜덤하게 하이퍼파라미터를 샘플링해서 성능 결과 관측
+    2. 관측된 값을 기반으로 대체 모델이 최적 함수 예측/추정
+        <details markdown="1">
+        <summary>그래프</summary>
+        <div>
+            <img width="956" height="500" alt="Image" src="https://github.com/user-attachments/assets/ca313432-4913-4514-a7f1-ed10b3287673" />
+            <p> (출처: https://velog.io/@ranyjoon/베이지안-최적화-기반-HyperOpt-XGBoost-LightGBM) </p>
+        </div>
+        </details>
+    3. 획득 함수에서 다음으로 관측할 하이퍼파라미터 추출
+    4. 해당 하이퍼파라미터로 관측된 값을 기반으로 다시 최적 함수 예측/추정
+        <details markdown="1">
+        <summary>그래프</summary>
+        <div>
+            <img width="946" height="508" alt="Image" src="https://github.com/user-attachments/assets/ba1ed835-3c7e-409a-83be-520f9b708ee4" />
+            <p> (출처: https://velog.io/@ranyjoon/베이지안-최적화-기반-HyperOpt-XGBoost-LightGBM) </p>
+        </div>
+        </details>
+    5. 반복
+- 주요 패키지
+  - **HyperOpt**, Bayesian optimazation, **Optuna**
+
+### HyperOpt
+- **search space(입력 값 범위)**
+    - 여러 개의 입력 변수와 값의 범위 지정
+    - `hp.quniform(label, low, high, q)` : label로 지정된 입력 값 변수 검색 공간을 low → high까지 q의 간격을 가지고 설정
+    - `hp.uniform(label, low, high)` : low → high까지 정규 분포 형태의 검색 공간 설정
+    - `hp.randint(label, upper)` : 0 → upper까지 랜덤한 정수 값으로 검색 공간 설정
+    - `hp.loguniform(label, low, high)` : exp(uniform(low, high)) 값을 반환하고, 반환 값의 log 변환 값은 정규 분포 형태를 가지는 검색 공간 설정
+    
+    ```python
+    # -10 ~ 10까지 1간격을 가지는 입력 변수 x 집합값과 -15 ~ 15까지 1간격을 가지는 입력 변수 y 집합값 설정
+    search_space = {'x': hp.quniform('x', -10, 10, 1), 'y': hp.quniform('y', -15, 15, 1)}
+    ```
+    
+- **목적 함수**
+    - search space를 입력 받아 loss 값을 계산, 반환
+    
+    ```python
+    # 목적 함수 생성. 입력 변수값과 입력 변수 검색 범위를 가지는 딕셔너리를 인자로 받고, 특정 값을 반환
+    def objective_func(search_space):
+        x = search_space['x']
+        y = search_space['y']
+        retval = x**2 - 20*y # 예시 함수
+        
+        return retval # return {'loss': retval, 'status':STATUS_OK}
+    ```
+
+- 목적함수의 **최소값을 찾는 함수**
+    - 목적 함수를 실행하여 최적의 최소 반환 값(loss)을 찾음
+    - **`fmin()`** → 인자로 목적함수, search space, 베이지안 최적화 기법 유형, 최적화 시도 횟수, 최적화 로그 기록 객체
+    
+    ```python
+    trial_val = Trials()
+    
+    # 목적 함수의 최솟값을 반환하는 최적 입력 변숫값을 5번의 입력값 시도(max_evals=5)로 찾아냄
+    best_01 = fmin(fn=objective_func, space=search_space, algo=tpe.suggest, max_evals=5
+    								, trials=trial_val, rstate=np.random.default_rng(seed=0)
+                  )
+    ```
+    
+    <details markdown="1">
+    <summary>반환 값</summary>
+    <div>
+        <pre>
+            <code>
+                print(trial_val.results)
+            </code>
+        </pre>
+        <ul>
+            <li> fmin()의 인자로 들어가는 Trials 객체의 result 속성에 목적 함수 반환 값들이 리스트 형태로 저장됨 </li>
+            <li> {’loss’: 함수 반환값, ‘state’: 반환 상태 값} 형태 </li>
+        </ul>
+        <pre>
+            <code>
+                print(trial_val.vals)
+            </code>
+        </pre>
+        <ul>
+            <li> vals 속성에 {’입력변수명’: 개별 수행 시마다 입력된 값 리스트} 형태로 저장됨 </li>
+        </ul>
+    </div>
+    </details>
