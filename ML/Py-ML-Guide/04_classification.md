@@ -260,20 +260,12 @@ VotingClassifier(estimators=[('LR',lr_clf),('KNN',knn_clf)], voting='soft')
     <details markdown="1">
     <summary>반환 값</summary>
     <div>
-        <pre>
-            <code>
-                print(trial_val.results)
-            </code>
-        </pre>
+        <pre><code>print(trial_val.results)</code></pre>
         <ul>
             <li> fmin()의 인자로 들어가는 Trials 객체의 result 속성에 목적 함수 반환 값들이 리스트 형태로 저장됨 </li>
             <li> {’loss’: 함수 반환값, ‘state’: 반환 상태 값} 형태 </li>
         </ul>
-        <pre>
-            <code>
-                print(trial_val.vals)
-            </code>
-        </pre>
+        <pre><code>print(trial_val.vals)</code></pre>
         <ul>
             <li> vals 속성에 {’입력변수명’: 개별 수행 시마다 입력된 값 리스트} 형태로 저장됨 </li>
         </ul>
