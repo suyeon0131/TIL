@@ -286,7 +286,8 @@ VotingClassifier(estimators=[('LR',lr_clf),('KNN',knn_clf)], voting='soft')
         <li>max_depth → 5에서 20까지 1간격, min_child_weight → 1에서 2까지 1간격</li>
         <li>colsample_bytree → 0.5에서 1사이, learning_rate → 0.01에서 0.2사이 정규 분포된 값으로 검색</li>
     </ul>
-    
+</div>
+<div>
     <pre><code>
     def objective_func(search_space):
         # 수행 시간 절약을 위해 n_estimators는 100으로 축소
@@ -297,9 +298,9 @@ VotingClassifier(estimators=[('LR',lr_clf),('KNN',knn_clf)], voting='soft')
                                 eval_metric='logloss')
         
         accuracy = cross_val_score(xgb_clf, X_train, y_train, scoring='accuracy', cv=3)
-    
+
         return {'loss':-1 * np.mean(accuracy), 'status': STATUS_OK}
-    </code></pre>
+</code></pre>
     <ul>
         <li>fmin()에서 search_space로 입력된 값은 모두 실수형 → XGBClassifier의 정수형 하이퍼파라미터를 위해 정수형 변환 필요</li>
         <li>정확도는 높을수록 좋음 → -1을 곱해서 정확도가 클수록 최소가 되도록 설정</li>
