@@ -181,7 +181,10 @@ VotingClassifier(estimators=[('LR',lr_clf),('KNN',knn_clf)], voting='soft')
     - (XGBoost 대비) 학습/예측 수행 시간 빠름, 메모리 사용량 적음, 카데고리형 featuer의 자동 변환과 최적 분할
     - **leaf 중심** 트리 분할
     - 주요 하이퍼파라미터
-        - `n_estimators` , `learning_rate` , `max_depth` , `min_child_samples` , `subsample` , `colsample_bytree` , `mun_leaves` , etc..
+        - 트리 구조: `max_depth` , `num_leaves` , `min_child_samples` , `min_child_weight`
+        - 샘플링 비율: `subsample` , `colsample_bytree`
+        - 손실 함수 규제: `reg_lambda` , `reg_alpha`
+        - `n_estimators` , `learning_rate` , etc..
 
 ## 하이퍼파라미터 튜닝
 - Grid Search, Random Search, Bayesian Optimization, 수동 튜닝
