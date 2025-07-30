@@ -6,6 +6,10 @@
 1. [Decision Tree(결정 트리)](#decision-tree결정-트리)
 2. [Ensemble(앙상블)](#ensemble앙상블)
 3. [하이퍼파라미터 튜닝](#하이퍼파라미터-튜닝)
+4. [산탄데르 은행 고객 만족 예측 실습](#산탄데르-은행-고객-만족-예측-kaggle)
+5. [신용카드 사기 예측 실습](#신용카드-사기-예측-실습)
+6. [Stacking Model](#stacking-model)
+7. [Feature Selection](#feature-selection)
 
 - 학습 데이터로 주어진 데이터의 feature와 label 값을 머신러닝 알고리즘으로 학습 → 모델 생성 → 미지의 값 예측
 
