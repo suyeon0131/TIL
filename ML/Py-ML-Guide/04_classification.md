@@ -312,3 +312,248 @@ VotingClassifier(estimators=[('LR',lr_clf),('KNN',knn_clf)], voting='soft')
                 max_evals=50, # 최대 반복 횟수를 지정
                 trials=trial_val, rstate=np.random.default_rng(seed=9))
     ```
+
+## 산탄데르 은행 고객 만족 예측 (Kaggle)
+
+### 데이터 전처리
+
+- column명이 var3, var15, imp_ent_var16_ult1, imp_op_var39_comer_ult1 등으로 알기 어렵게 되어 있음
+
+```
+0    73012
+1     3008
+unsatisfied 비율은 0.04
+```
+
+- 만족 고객 73012명, 불만족 고객 3008명으로 데이터 불균형
+
+```python
+cust_df['var3'].value_counts()
+```
+
+```
+ 2         74165
+ 8           138
+-999999      116
+ 9           110
+ 3           108
+           ...
+ 231           1
+ 188           1
+ 168           1
+ 135           1
+ 87            1
+```
+
+- -999999 → 쓰레기 값
+
+```python
+cust_df['var3'].replace(-999999, 2, inplace=True)
+cust_df.drop('ID', axis=1, inplace=True)
+```
+
+- -999999를 가장 많은 2로 값 대체
+- ID 값 드랍
+
+```python
+X_features = cust_df.iloc[:, :-1]
+y_labels = cust_df.iloc[:, -1]
+```
+
+- feature 셋과 label 셋 분리
+
+```python
+X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels,
+                                                   test_size=0.2, random_state=0)
+X_tr, X_val, y_tr, y_val = train_test_split(X_train, y_train,
+                                            test_size=0.3, random_state=0)
+```
+
+### XGBoost 모델 학습 & 하이퍼파라미터 튜닝
+
+```python
+xgb_clf = XGBClassifier(n_estimators=500, learning_rate=0.05, random_state=156,
+                        early_stopping_rounds=100, eval_metric='auc')
+xgb_clf.fit(X_tr, y_tr, eval_set=[(X_tr, y_tr), (X_val, y_val)])
+```
+
+```python
+xgb_search_space = {'max_depth': hp.quniform('max_depth', 5, 15, 1), 
+                    'min_child_weight': hp.quniform('min_child_weight', 1, 6, 1),
+                    'colsample_bytree': hp.uniform('colsample_bytree', 0.5, 0.95),
+                    'learning_rate': hp.uniform('learning_rate', 0.01, 0.2)
+}
+```
+
+하이퍼파라미터 튜닝
+
+1. fmin()함수 호출. 
+2. fmin()에서 입력된 search_space값으로 XGBClassifier 교차 검증 학습 후 **-1* roc_auc 평균** 값을 반환. 
+3. max_evals 지정된 횟수만큼 반복 후 목적함수의 최소값을 가지는 최적 입력값 추출.
+
+### LightGBM 모델 학습 & 하이퍼파라미터 튜닝
+
+## 신용카드 사기 예측 실습
+
+- 다양한 feature engineering 방식으로 차례로 logistic regression과 LightGBM을 이용하여 적용 후 비교
+- **Feature Engineering**
+    - 중요 feature의 데이터 분포도 변경
+        - 정규분포
+        - log 변환: 왜곡된 분포도를 가진 데이터 세트를 비교적 정규분포에 가깝게 변환
+    - 이상치 제거
+        - IQR과 box plot
+            
+            <img width="242" height="298" alt="Image" src="https://github.com/user-attachments/assets/45693aa4-b234-434c-bb17-98e4345311f3" />
+            
+    - SMOTE 오버 샘플링
+        - Undersampling: 많 → 적
+        - Oversampling: 적 → 많
+        - SMOTE: KNN으로 데이터 증식
+- **ML Algorithm**
+    - Logistic Regression
+    - LightGBM
+
+### 데이터 1차 가공 & 모델 학습/예측/평가
+
+- 사기 데이터가 정상 데이터보다 훨씬 적음 → **데이터 불균형 심함**
+    
+    ```
+    학습 데이터 레이블 값 비율
+    0    99.827451
+    1     0.172549
+    
+    테스트 데이터 레이블 값 비율
+    0    99.826785
+    1     0.173215
+    ```
+    
+    - 정확도는 의미없음. **재현율**을 높이는 게 중요
+- 개인정보 때문에 PCA로 암호화 되어 있음 (v1 ~ v28)
+- `Amount`: 카드 사용 금액
+- `Class` : 0 → 정상, 1 → 사기
+- LightGBM
+    - `boost_from_average` 가 **True**일 경우 레이블 값이 극도로 불균형 분포를 이루는 경우 재현률 및 ROC-AUC 성능이 매우 저하됨.
+    - 레이블 값이 극도로 불균형할 경우 `boost_from_average` 를 **False**로 설정하는 것이 유리
+
+### 데이터 분포도 변환 & 모델 학습/예측/평가
+
+- 중요 feature 분포도 확인
+    - 큰 금액의 Amount는 소수임
+    - 정규분포나 로그 변환하자
+    
+    ```python
+    np.long(1e-1000 + 1) == np.log1p(1e-1000)
+    ```
+    
+    - 너무 작은 값은 0으로 인식하기 때문에 1을 더해줘야 함
+    
+    ```python
+    np.expm1(var_1)
+    ```
+    
+    - 다시 변환해줘야 함
+
+### 이상치 데이터 제거 & 모델 학습/예측/평가
+
+- 결정 레이블인 class 값과 가장 상관도가 높은 피처 추출
+- 이상치 추출 함수
+    
+    ```python
+    def get_outlier(df=None, column=None, weight=1.5):
+        # fraud에 해당하는 column 데이터만 추출
+        # 1/4 분위와 3/4 분위 지점을 np.percentile로 구함. 
+        fraud = df[df['Class']==1][column]
+        quantile_25 = np.percentile(fraud.values, 25)
+        quantile_75 = np.percentile(fraud.values, 75)
+        # IQR을 구하고, IQR에 1.5를 곱하여 최대값과 최소값 지점 구함. 
+        iqr = quantile_75 - quantile_25
+        iqr_weight = iqr * weight
+        lowest_val = quantile_25 - iqr_weight
+        highest_val = quantile_75 + iqr_weight
+        # 최대값 보다 크거나, 최소값 보다 작은 값을 아웃라이어로 설정하고 DataFrame index 반환. 
+        outlier_index = fraud[(fraud < lowest_val) | (fraud > highest_val)].index
+        return outlier_index
+    ```
+    
+- 이상치 데이터 삭제
+    
+    ```python
+    outlier_index = get_outlier(df=df_copy, column='V14', weight=1.5)
+    df_copy.drop(outlier_index, axis=0, inplace=True)
+    ```
+    
+
+### SMOTE 오버 샘플링 적용 & 모델 학습/예측/평가
+
+```python
+smote = SMOTE(random_state=0)
+X_train_over, y_train_over = smote.fit_resample(X_train, y_train)
+```
+
+```
+SMOTE 적용 전 학습용 피처/레이블 데이터 세트:  (199362, 29) (199362,)
+SMOTE 적용 후 학습용 피처/레이블 데이터 세트:  (398040, 29) (398040,)
+SMOTE 적용 후 레이블 값 분포:
+ 0    199020
+ 1    199020
+```
+
+```python
+정확도: 0.9723, 정밀도: 0.0542, 재현율: 0.9247,    F1: 0.1023, AUC:0.9737
+```
+
+- 이와 같이 오버샘플링이 과도하게 되면 정밀도와 F1-score가 매우 낮게 측정될 수 있음 → **주의**
+    - 비선형적이고 복잡한 패턴을 학습하는 LightGBM에서는 이러한 현상이 잘 일어나지 않음
+
+## Stacking Model
+
+### Basic Stacking Model
+
+- 모델들이 예측한 값들을 stacking 형태로 만들어서 메타 모델이 이를 학습하고 예측하는 모델
+
+<img width="390" height="365" alt="Image" src="https://github.com/user-attachments/assets/382ee006-83f9-458a-bf73-9c73d3bf3066" />
+
+<img width="1205" height="499" alt="Image" src="https://github.com/user-attachments/assets/16f1962e-5bb8-4db6-bf1b-e51d76e7ac3f" />
+
+- 반드시 성능이 향상되는 것은 아님
+
+### CV-Stacking
+
+1. 각 모델 별로 원본 학습/테스트 데이터를 예측한 결과 값을 기반으로 **메타 모델을 위한 학습용/테스트용 데이터 생성**
+2. 1에서 개별 모델들이 생성한 학습용 데이터를 모두 스태킹 형태로 합쳐서 메타 모델이 학습할 최종 학습용 데이터 세트 생성, 테스트 데이터도 마찬가지
+3. 메타 모델은 최종적으로 생성된 학습 데이터 세트와 원본 학습 데이터의 레이블 데이터를 기반으로 학습한 뒤, 최종적으로 생성된 테스트 데이터 세트를 예측하고, 원본 테스트 데이터의 레이블 데이터를 기반으로 평가
+
+<img width="2484" height="1318" alt="Image" src="https://github.com/user-attachments/assets/871cee83-4b1e-4893-b5c1-be72b6990222" />
+
+## Feature Selection
+
+- 모델을 구성하는 주요 feature들을 선택
+    - 불필요한 다수의 feature들로 인해 모델 성능을 떨어뜨릴 가능성 제거
+    - 설명 가능한 모델이 될 수 있도록 feature 선별
+
+### 유형
+
+- feature 값의 분포, Null, feature 간 높은 상관도, 결정 값과의 독립성 등 고려
+- 모델의 feature importance 기반
+
+### 사이킷런 지원
+
+- **RFE(Recursive Feature Elimination)**
+    - 모델 최초 학습 후 feature 중요도 선정
+    - 중요도가 낮은 속성을 차례로 제거 → 반복적 학습/평가 수행 → 최적 feature 추출
+    - 수행 시간 오래 걸림
+- **SelectFromModel**
+    - 모델 최초 학습 후 선정된 feature 중요도에 따라 평균/중앙값의 특정 비율 이상인 feature 선택
+
+### Permutation Importance
+
+- 특정 feature들의 값을 완전히 변조했을 때 모델 성능이 얼마나 저하되는지를 기준으로 해당 feature의 중요도 산정
+- 수행 시간 오래 걸림
+- 일반적으로 테스트 데이터에 특정 feature들을 반복적으로 변조한 뒤 해당 feature의 중요도를 평균적으로 산정
+
+### 왜 feature importance는 절대적인 feature selection 기준이 될 수 없는가?
+
+- feature importance는 최적 tree 구조를 만들기 위한 feature들의 impurity가 중요 기준임
+    - 결정 값과 관련이 없어도 높아질 수 있음
+- 학습 데이터를 기반으로 생성되기 때문에 테스트 데이터에서 달라질 수 있음
+- number형의 높은 cardinality feature에 biased 되어 있음
