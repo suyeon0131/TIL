@@ -18,6 +18,7 @@
   - [02. 사이킷런으로 시작하는 머신러닝](ML/Py-ML-Guide/02_ml_with_scikit-learn.md)
   - [03. 평가(Evaluation)](ML/Py-ML-Guide/03_evaluation.md)
   - [04. 분류(Classification)](ML/Py-ML-Guide/04_classification.md)
+  - [05. 회귀(Regression)](ML/Py-ML-Guide/05_regression.md)
 
 ### Spring
 - **스프링 입문**
