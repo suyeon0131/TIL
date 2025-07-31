@@ -94,8 +94,9 @@ def get_weight_updates(w1, w0, X, y, learning_rate=0.01):
 
 ### 회귀 평가 지표
 
-| **MAE(Mean Absolute Error)** | 실제 값과 예측 값의 차이를 절댓값으로 변환해 평균 |
+| 평가 지표 | 설명 |
 | --- | --- |
+| **MAE(Mean Absolute Error)** | 실제 값과 예측 값의 차이를 절댓값으로 변환해 평균 |
 | MSE(Mean Squared Error) | 실제 값과 예측 값의 차이를 제곱해 평균 |
 | MSLE | MSE에 로그 적용. 일부 큰 오류 값들이 전체 오류 값을 증가시키는 것을 방지 |
 | **RMSE** | MSE에 루트 적용 |
