@@ -3,10 +3,10 @@
 게시물에 포함된 코드와 이미지 등의 모든 저작권은 인프런과 권철민 강사님께 있습니다.
 
 **Object**
-1. [Linear Regression](#선형-회귀)
-2. []()
-3. []()
-4. []()
+1. [Linear Regression](#linear-regression-선형-회귀)
+2. [Polynomial Regression](#polynomial-regression-다항-회귀)
+3. [Regularized Linear Regression](#규제-선형-회귀)
+4. [선형 회귀를 위한 데이터 변환](#선형-회귀를-위한-데이터-변환)
 5. []()
 
 - 데이터 값이 평균과 같은 일정한 값으로 돌아가려는 경향을 이용한 통계학 기법
@@ -19,7 +19,7 @@
     - 선형 → 선형 회귀
     - 비선형 → 비선형 회귀
 
-## 선형 회귀
+## Linear Regression (선형 회귀)
 
 - 일반 선형 회귀
     - 예측 값과 실제 값의 RSS(Residual Sum of Squares)를 최소화할 수 있도록 회귀 계수를 최적화하며, 규제를 적용하지 않은 모델
@@ -75,22 +75,21 @@ def get_weight_updates(w1, w0, X, y, learning_rate=0.01):
 
 - 모든 데이터를 사용하면 계산량이 많아져 시간이 오래 걸림 → 일부 데이터만으로도 충분~ → **Mini-batch** !
 
-### Linear Regression
+### 사이킷런 LinearRegression 클래스
+- 예측 값과 실제 값의 RSS를 최소화하는 OLS(Ordinary Least Squares) 추정 방식으로 구현한 클래스
+- fit() 메서드로 X, y 배열을 입력 받으면 회귀 계수인 W를 `coef_` 속성에 저장
+- 입력 파라미터
+    - `fit_intercept` : 절편을 적용 할지 말지 (default=True)
+        - False → 0으로 지정
+    - `normalize` : 입력 데이터 셋을 정규화 할지 말지 (default=False)
+        - 헷갈리니까 디폴트로 냅두자
+- 속성
+    - `coef_` , `intercept_`
 
-- 사이킷런 LinearRegression 클래스
-    - 예측 값과 실제 값의 RSS를 최소화하는 OLS(Ordinary Least Squares) 추정 방식으로 구현한 클래스
-    - fit() 메서드로 X, y 배열을 입력 받으면 회귀 계수인 W를 `coef_` 속성에 저장
-    - 입력 파라미터
-        - `fit_intercept` : 절편을 적용 할지 말지 (default=True)
-            - False → 0으로 지정
-        - `normalize` : 입력 데이터 셋을 정규화 할지 말지 (default=False)
-            - 헷갈리니까 디폴트로 냅두자
-    - 속성
-        - `coef_` , `intercept_`
-- 선형 회귀의 다중 공선성 문제
-    - 일반적으로 선형 회귀는 입력 feature의 **독립성**에 많은 영향을 받음.
-    - feature 간의 상관 관계가 매우 높은 경우 분산이 매우 커져서 오류에 매우 민감해짐 → **다중 공선성 문제**
-        - 상관 관계가 높은 feature가 많은 경우 독립적인 **중요한 feature만 남기고 제거하거나 규제를 적용**
+### 선형 회귀의 다중 공선성 문제
+- 일반적으로 선형 회귀는 입력 feature의 **독립성**에 많은 영향을 받음.
+- feature 간의 상관 관계가 매우 높은 경우 분산이 매우 커져서 오류에 매우 민감해짐 → **다중 공선성 문제**
+    - 상관 관계가 높은 feature가 많은 경우 독립적인 **중요한 feature만 남기고 제거하거나 규제를 적용**
 
 ### 회귀 평가 지표
 
@@ -110,3 +109,99 @@ def get_weight_updates(w1, w0, X, y, learning_rate=0.01):
         - MAE는 절댓값의 합이기 때문에 음수가 될 수 없음
         
         → scoring 함수가 score 값이 클수록 좋은 평가 결과로 인식하기 때문 → -1을 곱해서 작은 오류 값이 더 큰 숫자로 인식되게 함
+
+## Polynomial Regression (다항 회귀)
+
+- 회귀식이 독립 변수의 단항식이 아닌 2차, 3차 방정식과 같은 다항식으로 표현되는 것
+- 단순 선형 회귀 직선형으로 표현한 것보다 다항 회귀 곡선형으로 표현한 것이 예측 성능이 높음
+- 다항 회귀도 **선형 회귀**임
+    - 선형 회귀/비선형 회귀를 나누는 기준은 회귀 계수에 따른 것이지 독립변수와는 무관
+
+### 사이킷런에서의 다항 회귀
+
+- 사이킷런은 다항 회귀를 API로 바로 제공하지 않음
+- **PolynomialFeatures** 클래스로 원본 단항 피처들을 다항 피처들로 변환한 후,m데이터셋에 **LinearRegression 객체**를 적용
+
+> 1차 단항 피처들의 값이 [$x_1, x_2$] = [0, 1] 일 경우   
+2차 다항 피처들의 값은 [1, $x_1$, $x_2$, $x_1x_2$, ${x_1}^2$, ${x_2}^2$] 형태인 [1, 0, 1, 0, 0, 1]로 변환
+> 
+- 일반적으로 Pipeline 클래스를 이용해서 PolynomialFeatures 변환과 LinearRegression 학습/예측을 결합하여 구현함
+
+```python
+def polynomial_func(X):
+    y = 1 + 2*X[:,0] + 3*X[:,0]**2 + 4*X[:,1]**3 
+    return y
+
+# Pipeline 객체로 Streamline 하게 Polynomial Feature변환과 Linear Regression을 연결
+model = Pipeline([('poly', PolynomialFeatures(degree=3)),
+                  ('linear', LinearRegression())])
+X = np.arange(4).reshape(2,2)
+y = polynomial_func(X)
+
+model = model.fit(X, y)
+```
+
+### Bias-Variance Trade-off
+
+<img width="466" height="455" alt="Image" src="https://github.com/user-attachments/assets/dc7c63f5-6327-443b-9514-68f0506a1533" />   
+
+(출처: [http://scott.fortmann-roe.com/docs/BiasVariance.html](http://scott.fortmann-roe.com/docs/BiasVariance.html))
+
+## 규제 선형 회귀
+
+- 비용 함수에 alpha 값으로 페널티를 부여해 회귀 계수 값의 크기를 감소시켜 과적합 개선
+- 최적 모델을 위한 cost 함수 구성 요소
+    - 학습 데이터 잔차 오류 최소화 + 회귀 계수 크기 제어
+
+### 규제 선형 모델에서 alpha
+
+<img width="448" height="49" alt="Image" src="https://github.com/user-attachments/assets/940d88ff-350a-4d38-869f-cb6762c55c63" />
+
+- alpha 값을 크게 하면 비용 함수는 회귀 계수 W의 값을 작게 함 → 과적합 개선
+- alpha 값을 작게 하면 회귀 계수 W의 값이 커져도 상쇄 가능 → 학습 데이터 적합 개선
+
+### **Ridge - L2**
+
+- W의 제곱에 대해 페널티 부여
+- alpha 값으로 회귀 계수의 크기 조절
+    - alpha가 크면 → 회귀 계수 감소
+    - 작으면 → 회귀 계수 증가
+
+### **Lasso - L1**
+
+- W의 절댓값에 대해 페널티 부여
+- **영향력이 크지 않은 회귀 계수 값을 0으로 변환해 제거**
+    - 적절한 피처만 회귀에 포함시키는 feature selection 특성을 가짐
+
+### **ElasticNet - L1+L2**
+
+- L1 규제로 피처의 개수를 줄이고, L2 규제로 계수 값의 크기 조정
+- 피처가 많은 데이터셋에 적용
+- ElasticNet 클래스의 주요 생성 파라미터
+    - `alpha`
+        - ridge, lasso의 alpha와 다름
+        - a(L1의 alpha 값) + b(L2의 alpha 값)
+    - `l1_ratio`
+        - a / (a+b)
+
+## 선형 회귀를 위한 데이터 변환
+
+- 선형 회귀 모델은 일반적으로 feature와 target 값 간에 선형 관계가 있다고 가정하고 선형 함수를 찾아내 결과값을 예측함
+
+### Target 값 변환
+
+- 정규 분포 선호
+- skew 되어 있을 경우, 일반적으로 로그 변환
+
+### Feature 값 변환
+
+- **스케일링**
+    - 균일한 스케일링/정규화 적용
+    - StandardScaler/MinMaxScaler
+- **다항 특성 변환** (polynomial feature)
+    - 스케일링/정규화 수행한 데이터셋에 다시 다항 특성 적용
+- **로그 변환**
+
+## Reference
+
+[Underfitting vs. Overfitting](https://scikit-learn.org/stable/auto_examples/model_selection/plot_underfitting_overfitting.html)
